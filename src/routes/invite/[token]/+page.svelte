@@ -5,6 +5,17 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 	let submitting = $state(false);
+
+	let password = $state('');
+	let passwordConfirm = $state('');
+	let confirmInput: HTMLInputElement | undefined = $state();
+
+	// Native validity blocks submit on mismatch; the server re-checks anyway.
+	$effect(() => {
+		confirmInput?.setCustomValidity(
+			passwordConfirm && password !== passwordConfirm ? "Passwords don't match." : ''
+		);
+	});
 </script>
 
 <svelte:head>
@@ -59,7 +70,33 @@
 			</div>
 			<div>
 				<label for="password" class="field-label">Password</label>
-				<input id="password" name="password" type="password" required minlength="8" class="field" />
+				<input
+					id="password"
+					name="password"
+					type="password"
+					required
+					minlength="8"
+					autocomplete="new-password"
+					bind:value={password}
+					class="field"
+				/>
+				<p class="text-ink-400 mt-1 text-xs">At least 8 characters.</p>
+			</div>
+			<div>
+				<label for="passwordConfirm" class="field-label">Confirm password</label>
+				<input
+					id="passwordConfirm"
+					name="passwordConfirm"
+					type="password"
+					required
+					autocomplete="new-password"
+					bind:value={passwordConfirm}
+					bind:this={confirmInput}
+					class="field"
+				/>
+				{#if passwordConfirm && password !== passwordConfirm}
+					<p class="mt-1 text-xs font-medium text-red-600">Passwords don't match.</p>
+				{/if}
 			</div>
 			<button type="submit" disabled={submitting} class="btn-primary w-full">
 				{submitting ? 'Joining…' : 'Join team'}

@@ -33,6 +33,9 @@ export const actions: Actions = {
 				email
 			});
 		}
+		if (password !== String(form.get('passwordConfirm') ?? '')) {
+			return fail(400, { message: "Passwords don't match.", name, businessName, email });
+		}
 
 		let newUserId: string;
 		try {

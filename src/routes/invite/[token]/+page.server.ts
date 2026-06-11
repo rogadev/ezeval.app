@@ -59,6 +59,9 @@ export const actions: Actions = {
 		if (password.length < 8) {
 			return fail(400, { message: 'Password must be at least 8 characters.', name, email });
 		}
+		if (password !== String(form.get('passwordConfirm') ?? '')) {
+			return fail(400, { message: "Passwords don't match.", name, email });
+		}
 
 		let newUserId: string;
 		try {
