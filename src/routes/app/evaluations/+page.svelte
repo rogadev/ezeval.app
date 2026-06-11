@@ -15,7 +15,8 @@
 
 {#if data.evaluations.length === 0}
 	<div class="card text-ink-500 p-8 text-center">
-		No evaluations yet — open a <a href="/app/sheets" class="font-semibold underline">price sheet</a>
+		No evaluations yet — open a <a href="/app/sheets" class="font-semibold underline">price sheet</a
+		>
 		and start tapping.
 	</div>
 {:else}

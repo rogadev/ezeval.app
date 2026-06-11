@@ -103,8 +103,8 @@
 				<span class="text-brand-400">Not on paper.</span>
 			</h1>
 			<p class="text-ink-300 mt-6 max-w-xl text-lg">
-				Walk the property, tap the windows, hand over the number. EzEval turns your price sheet
-				into a field tool your whole crew can use — without ever exposing what's on it.
+				Walk the property, tap the windows, hand over the number. EzEval turns your price sheet into
+				a field tool your whole crew can use — without ever exposing what's on it.
 			</p>
 			<div class="mt-8 flex flex-wrap items-center gap-3">
 				<a href="/signup" class="btn-primary !min-h-14 !px-8 !text-lg">Start 14-day free trial</a>

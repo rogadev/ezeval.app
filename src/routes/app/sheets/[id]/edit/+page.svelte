@@ -58,7 +58,10 @@
 	<title>Edit {data.sheet.name} — EzEval</title>
 </svelte:head>
 
-<a href="/app/sheets" class="text-ink-500 hover:text-ink-800 mb-3 inline-flex items-center gap-1 text-sm font-medium">
+<a
+	href="/app/sheets"
+	class="text-ink-500 hover:text-ink-800 mb-3 inline-flex items-center gap-1 text-sm font-medium"
+>
 	<Icon name="back" size={16} />
 	All sheets
 </a>
@@ -236,7 +239,10 @@
 								placeholder="0.00"
 								class="field num w-20 border-0 px-2 py-1.5"
 							/>
-							<select bind:value={button.pricingUnit} class="field w-auto border-0 px-1 py-1.5 text-sm">
+							<select
+								bind:value={button.pricingUnit}
+								class="field w-auto border-0 px-1 py-1.5 text-sm"
+							>
 								<option value="flat">each</option>
 								<option value="per_unit">/pane</option>
 							</select>

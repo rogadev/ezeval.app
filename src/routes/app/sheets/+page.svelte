@@ -34,8 +34,7 @@
 			</div>
 			<div class="text-ink-500 mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm">
 				<span>
-					{sheet.estimatorVisibility === 'metrics_only' ? 'Metrics only' : 'Grand total'} for field
-					staff
+					{sheet.estimatorVisibility === 'metrics_only' ? 'Metrics only' : 'Grand total'} for field staff
 				</span>
 				{#if sheet.minimumCents !== undefined && sheet.minimumCents > 0}
 					<span class="num font-normal">min {formatCents(sheet.minimumCents)}</span>

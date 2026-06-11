@@ -44,8 +44,8 @@
 <div class="card mt-6 p-5">
 	<h2 class="heading-display text-lg">Invite a teammate</h2>
 	<p class="text-ink-500 mt-0.5 text-sm">
-		Estimators and technicians use your price sheets under the visibility rules you set — they
-		never see what you don't want them to.
+		Estimators and technicians use your price sheets under the visibility rules you set — they never
+		see what you don't want them to.
 	</p>
 
 	{#if form && 'message' in form && form.message}
@@ -81,12 +81,20 @@
 				<span class="text-ink-500 min-w-0 flex-1 truncate text-sm">
 					{invite.email ?? inviteUrl(invite.token)}
 				</span>
-				<button type="button" class="btn-outline min-h-10 px-3 text-sm" onclick={() => copy(invite.token)}>
+				<button
+					type="button"
+					class="btn-outline min-h-10 px-3 text-sm"
+					onclick={() => copy(invite.token)}
+				>
 					{copiedToken === invite.token ? 'Copied!' : 'Copy link'}
 				</button>
 				<form method="POST" action="?/revoke" use:enhance>
 					<input type="hidden" name="id" value={invite.id} />
-					<button type="submit" class="btn-ghost min-h-10 px-3 text-red-600" aria-label="Revoke invite">
+					<button
+						type="submit"
+						class="btn-ghost min-h-10 px-3 text-red-600"
+						aria-label="Revoke invite"
+					>
 						<Icon name="x" size={18} />
 					</button>
 				</form>

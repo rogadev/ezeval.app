@@ -117,9 +117,7 @@ export interface SheetDefinitionPayload {
 
 const LIMITS = { rows: 10, buttonsPerRow: 10, label: 40, name: 60, maxCents: 1_000_000 };
 
-type Validated =
-	| { ok: true; sheet: ValidatedSheet }
-	| { ok: false; message: string };
+type Validated = { ok: true; sheet: ValidatedSheet } | { ok: false; message: string };
 
 interface ValidatedSheet {
 	name: string;

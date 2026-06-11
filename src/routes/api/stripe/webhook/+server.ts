@@ -46,7 +46,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		case 'customer.subscription.deleted': {
 			const subscription = event.data.object;
 			const businessId = subscription.metadata?.businessId;
-			const status = event.type === 'customer.subscription.deleted' ? 'canceled' : subscription.status;
+			const status =
+				event.type === 'customer.subscription.deleted' ? 'canceled' : subscription.status;
 			if (businessId) {
 				await db
 					.update(businesses)

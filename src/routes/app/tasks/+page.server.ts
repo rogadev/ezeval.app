@@ -56,7 +56,11 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.orderBy(asc(userTable.name)),
 		listSheets(user.businessId),
 		db
-			.select({ id: workflowTemplates.id, name: workflowTemplates.name, isDefault: workflowTemplates.isDefault })
+			.select({
+				id: workflowTemplates.id,
+				name: workflowTemplates.name,
+				isDefault: workflowTemplates.isDefault
+			})
 			.from(workflowTemplates)
 			.where(eq(workflowTemplates.businessId, user.businessId))
 			.orderBy(asc(workflowTemplates.createdAt))
@@ -133,7 +137,10 @@ export const actions: Actions = {
 				.select({ id: workflowTemplates.id })
 				.from(workflowTemplates)
 				.where(
-					and(eq(workflowTemplates.businessId, user.businessId), eq(workflowTemplates.isDefault, true))
+					and(
+						eq(workflowTemplates.businessId, user.businessId),
+						eq(workflowTemplates.isDefault, true)
+					)
 				);
 			template = def?.id ?? null;
 		}
@@ -143,13 +150,18 @@ export const actions: Actions = {
 				.from(workflowSteps)
 				.innerJoin(workflowTemplates, eq(workflowSteps.templateId, workflowTemplates.id))
 				.where(
-					and(eq(workflowSteps.templateId, template), eq(workflowTemplates.businessId, user.businessId))
+					and(
+						eq(workflowSteps.templateId, template),
+						eq(workflowTemplates.businessId, user.businessId)
+					)
 				)
 				.orderBy(asc(workflowSteps.position));
 			if (steps.length) {
-				await db.insert(jobWorkflowItems).values(
-					steps.map((step) => ({ jobId: job.id, label: step.label, position: step.position }))
-				);
+				await db
+					.insert(jobWorkflowItems)
+					.values(
+						steps.map((step) => ({ jobId: job.id, label: step.label, position: step.position }))
+					);
 			}
 		}
 

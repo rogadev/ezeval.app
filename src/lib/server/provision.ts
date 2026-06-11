@@ -1,5 +1,11 @@
 import { db } from './db';
-import { priceSheets, priceSheetRows, priceSheetButtons, workflowTemplates, workflowSteps } from './db/schema';
+import {
+	priceSheets,
+	priceSheetRows,
+	priceSheetButtons,
+	workflowTemplates,
+	workflowSteps
+} from './db/schema';
 
 /**
  * The founder's original 2021 reference sheet (spec §4.2), recovered from the

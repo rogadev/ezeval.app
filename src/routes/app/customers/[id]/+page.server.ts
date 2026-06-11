@@ -38,7 +38,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		})
 		.from(evaluations)
 		.leftJoin(priceSheets, eq(evaluations.priceSheetId, priceSheets.id))
-		.where(and(eq(evaluations.customerId, customer.id), eq(evaluations.businessId, user.businessId)))
+		.where(
+			and(eq(evaluations.customerId, customer.id), eq(evaluations.businessId, user.businessId))
+		)
 		.orderBy(desc(evaluations.createdAt))
 		.limit(20);
 

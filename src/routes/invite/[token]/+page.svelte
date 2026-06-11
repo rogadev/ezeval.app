@@ -59,14 +59,7 @@
 			</div>
 			<div>
 				<label for="password" class="field-label">Password</label>
-				<input
-					id="password"
-					name="password"
-					type="password"
-					required
-					minlength="8"
-					class="field"
-				/>
+				<input id="password" name="password" type="password" required minlength="8" class="field" />
 			</div>
 			<button type="submit" disabled={submitting} class="btn-primary w-full">
 				{submitting ? 'Joining…' : 'Join team'}

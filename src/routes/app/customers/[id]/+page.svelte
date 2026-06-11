@@ -89,7 +89,10 @@
 			<ul class="divide-ink-100 mt-2 divide-y">
 				{#each data.jobs as job (job.id)}
 					<li>
-						<a href="/app/tasks/{job.id}" class="hover:bg-ink-50 flex items-center justify-between gap-2 py-2.5">
+						<a
+							href="/app/tasks/{job.id}"
+							class="hover:bg-ink-50 flex items-center justify-between gap-2 py-2.5"
+						>
 							<span class="text-sm font-medium">
 								{job.scheduledDate ?? 'Unscheduled'}
 								{#if job.fixedTime}<span class="num">@ {job.fixedTime}</span>{/if}

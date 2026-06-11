@@ -7,7 +7,12 @@
 	const isAdmin = $derived(data.user.role === 'admin');
 
 	const address = $derived(
-		[data.customer.addressLine1, data.customer.addressLine2, data.customer.city, data.customer.region]
+		[
+			data.customer.addressLine1,
+			data.customer.addressLine2,
+			data.customer.city,
+			data.customer.region
+		]
 			.filter(Boolean)
 			.join(', ')
 	);
@@ -121,7 +126,7 @@
 								>
 									{#if step.completedAt}<Icon name="check" size={15} />{/if}
 								</span>
-								<span class="{step.completedAt ? 'text-ink-400 line-through' : 'font-medium'}">
+								<span class={step.completedAt ? 'text-ink-400 line-through' : 'font-medium'}>
 									{step.label}
 								</span>
 							</button>

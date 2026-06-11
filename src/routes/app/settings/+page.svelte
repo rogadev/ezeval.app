@@ -104,13 +104,7 @@
 			</div>
 			<div>
 				<label for="b-country" class="field-label">Country</label>
-				<input
-					id="b-country"
-					name="country"
-					type="text"
-					value={info.country ?? ''}
-					class="field"
-				/>
+				<input id="b-country" name="country" type="text" value={info.country ?? ''} class="field" />
 			</div>
 		</div>
 	</div>

@@ -101,9 +101,7 @@
 <div class="mt-6 grid gap-4 sm:grid-cols-2">
 	<a href="/app/sheets" class="card hover:border-brand-500 p-5 transition-colors">
 		<h2 class="font-display text-xl font-semibold tracking-wide">Start an evaluation</h2>
-		<p class="text-ink-500 mt-1 text-sm">
-			Walk-up quote? Open a sheet and capture it on the spot.
-		</p>
+		<p class="text-ink-500 mt-1 text-sm">Walk-up quote? Open a sheet and capture it on the spot.</p>
 	</a>
 	<a href="/app/evaluations" class="card hover:border-brand-500 p-5 transition-colors">
 		<h2 class="font-display text-xl font-semibold tracking-wide">Recent quotes</h2>

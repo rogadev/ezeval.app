@@ -60,7 +60,9 @@
 				<a
 					href={item.href}
 					class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors
-						{isActive(item.href) ? 'bg-brand-500 text-ink-950 font-semibold' : 'hover:bg-ink-800 hover:text-paper'}"
+						{isActive(item.href)
+						? 'bg-brand-500 text-ink-950 font-semibold'
+						: 'hover:bg-ink-800 hover:text-paper'}"
 				>
 					<Icon name={item.icon} size={20} />
 					{item.label}
@@ -106,10 +108,14 @@
 		{#if trialDaysLeft !== null && trialDaysLeft <= 7}
 			<div class="bg-brand-500 text-ink-950 px-4 py-2 text-center text-sm font-semibold">
 				{trialDaysLeft === 0 ? 'Your trial ends today' : `${trialDaysLeft} days left in your trial`}
-				{#if isAdmin}— <a href="/app/billing" class="underline underline-offset-2">subscribe now</a>{/if}
+				{#if isAdmin}— <a href="/app/billing" class="underline underline-offset-2">subscribe now</a
+					>{/if}
 			</div>
 		{:else if data.business.subscriptionStatus === 'past_due'}
-			<div class="px-4 py-2 text-center text-sm font-semibold text-white" style="background:#b91c1c">
+			<div
+				class="px-4 py-2 text-center text-sm font-semibold text-white"
+				style="background:#b91c1c"
+			>
 				Your last payment failed — please
 				{#if isAdmin}<a href="/app/billing" class="underline underline-offset-2">update your card</a
 					>{:else}ask your admin to update billing{/if}

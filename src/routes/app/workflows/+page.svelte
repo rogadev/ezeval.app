@@ -51,7 +51,11 @@
 							}}
 						>
 							<input type="hidden" name="id" value={template.id} />
-							<button type="submit" class="btn-ghost min-h-10 px-3 text-red-600" aria-label="Delete workflow">
+							<button
+								type="submit"
+								class="btn-ghost min-h-10 px-3 text-red-600"
+								aria-label="Delete workflow"
+							>
 								<Icon name="trash" size={18} />
 							</button>
 						</form>
@@ -63,7 +67,7 @@
 				<form method="POST" action="?/save" class="mt-3 space-y-2" use:enhance>
 					<input type="hidden" name="id" value={template.id} />
 					<input type="hidden" name="steps" value={JSON.stringify(drafts[template.id])} />
-					{#each drafts[template.id] as step, index (index)}
+					{#each drafts[template.id], index (index)}
 						<div class="flex items-center gap-2">
 							<span class="num text-ink-400 w-6 text-center">{index + 1}</span>
 							<input

@@ -56,7 +56,11 @@ export const load: PageServerLoad = async ({ locals, params, url }) => {
 					}
 				: {})
 		},
-		priceMode: isAdmin ? 'full' : sheet.estimatorVisibility === 'grand_total' ? 'total_end' : 'none',
+		priceMode: isAdmin
+			? 'full'
+			: sheet.estimatorVisibility === 'grand_total'
+				? 'total_end'
+				: 'none',
 		customers: customerList,
 		job
 	};
