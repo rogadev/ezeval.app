@@ -14,6 +14,14 @@
 	let map: LeafletMap | null = null;
 	let optimizing = $state(false);
 
+	// Popup content is hand-built HTML; customer fields are user input and
+	// must be escaped (stored XSS otherwise).
+	const esc = (value: string | null | undefined) =>
+		String(value ?? '').replace(
+			/[&<>"']/g,
+			(c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+		);
+
 	$effect(() => {
 		// re-render markers whenever the day's stops change
 		const stops = mapped;
@@ -50,11 +58,11 @@
 				L.marker(point, { icon })
 					.addTo(map)
 					.bindPopup(
-						`<strong>${index + 1}. ${stop.customerName}</strong><br>` +
-							`${[stop.addressLine1, stop.city].filter(Boolean).join(', ')}` +
-							(stop.fixedTime ? `<br>Fixed @ ${stop.fixedTime}` : '<br>Flexible') +
-							(stop.animalNotes ? `<br>⚠️ ${stop.animalNotes}` : '') +
-							`<br><a href="/app/tasks/${stop.id}">Open job</a>`
+						`<strong>${index + 1}. ${esc(stop.customerName)}</strong><br>` +
+							`${esc([stop.addressLine1, stop.city].filter(Boolean).join(', '))}` +
+							(stop.fixedTime ? `<br>Fixed @ ${esc(stop.fixedTime)}` : '<br>Flexible') +
+							(stop.animalNotes ? `<br>⚠️ ${esc(stop.animalNotes)}` : '') +
+							`<br><a href="/app/tasks/${encodeURIComponent(stop.id)}">Open job</a>`
 					);
 			}
 			if (points.length > 1) {
