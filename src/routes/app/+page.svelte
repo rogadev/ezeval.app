@@ -103,6 +103,18 @@
 		<h2 class="font-display text-xl font-semibold tracking-wide">Start an evaluation</h2>
 		<p class="text-ink-500 mt-1 text-sm">Walk-up quote? Open a sheet and capture it on the spot.</p>
 	</a>
+	<a href="/app/customers?new=1" class="card hover:border-brand-500 p-5 transition-colors">
+		<h2 class="font-display text-xl font-semibold tracking-wide">Add a customer</h2>
+		<p class="text-ink-500 mt-1 text-sm">New client? Get them on the books in thirty seconds.</p>
+	</a>
+	<a href="/app/sheets" class="card hover:border-brand-500 p-5 transition-colors">
+		<h2 class="font-display text-xl font-semibold tracking-wide">Price sheets</h2>
+		<p class="text-ink-500 mt-1 text-sm">
+			{isAdmin
+				? 'View and update your buttons, prices, and rules.'
+				: 'See the sheets set up for you.'}
+		</p>
+	</a>
 	<a href="/app/evaluations" class="card hover:border-brand-500 p-5 transition-colors">
 		<h2 class="font-display text-xl font-semibold tracking-wide">Recent quotes</h2>
 		<p class="text-ink-500 mt-1 text-sm">Review evaluations captured by your team.</p>

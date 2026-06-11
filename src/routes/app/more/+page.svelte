@@ -7,6 +7,7 @@
 
 	const items = $derived(
 		[
+			{ href: '/app/tasks', label: 'Jobs', icon: 'briefcase', adminOnly: false },
 			{ href: '/app/customers', label: 'Customers', icon: 'users', adminOnly: false },
 			{ href: '/app/team', label: 'Team', icon: 'users', adminOnly: true },
 			{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },

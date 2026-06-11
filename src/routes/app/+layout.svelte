@@ -20,6 +20,7 @@
 		{ href: '/app/evaluations', label: 'Quotes', icon: 'quote' }
 	];
 	const secondary: NavItem[] = [
+		{ href: '/app/tasks', label: 'Jobs', icon: 'briefcase' },
 		{ href: '/app/customers', label: 'Customers', icon: 'users' },
 		{ href: '/app/team', label: 'Team', icon: 'users', adminOnly: true },
 		{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },

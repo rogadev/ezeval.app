@@ -6,6 +6,17 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 	const isAdmin = $derived(data.createOptions !== null);
 	let adding = $state(false);
+	let search = $state('');
+
+	const filtered = $derived.by(() => {
+		const query = search.trim().toLowerCase();
+		if (!query) return data.jobs;
+		return data.jobs.filter((job) =>
+			[job.customerName, job.customerCity, job.assigneeName, job.scheduledDate, job.status]
+				.filter(Boolean)
+				.some((value) => value!.toLowerCase().includes(query))
+		);
+	});
 
 	const statusStyle: Record<string, string> = {
 		scheduled: 'bg-ink-100 text-ink-700',
@@ -94,15 +105,27 @@
 	</form>
 {/if}
 
+{#if data.jobs.length > 5}
+	<input
+		type="search"
+		placeholder="Search jobs — customer, city, assignee, date…"
+		bind:value={search}
+		class="field mb-4"
+		aria-label="Search jobs"
+	/>
+{/if}
+
 {#if data.jobs.length === 0}
 	<div class="card text-ink-500 p-8 text-center">
 		{isAdmin
 			? 'No jobs yet — create one to dispatch your team.'
 			: 'Nothing assigned to you yet. Enjoy the sunshine.'}
 	</div>
+{:else if filtered.length === 0}
+	<div class="card text-ink-500 p-8 text-center">No matches.</div>
 {:else}
 	<div class="card divide-ink-100 divide-y-2">
-		{#each data.jobs as job (job.id)}
+		{#each filtered as job (job.id)}
 			<a href="/app/tasks/{job.id}" class="hover:bg-ink-50 flex items-center gap-3 px-4 py-3">
 				<div class="min-w-0 flex-1">
 					<p class="flex items-center gap-2 truncate font-semibold">

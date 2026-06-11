@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	import CustomerFields from '$lib/components/CustomerFields.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
-	let adding = $state(false);
+	// ?new=1 (e.g. from the dashboard quick action) opens the form right away.
+	// svelte-ignore state_referenced_locally
+	let adding = $state(page.url.searchParams.has('new'));
 	let search = $state('');
 
 	const filtered = $derived(

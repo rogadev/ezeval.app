@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import CustomerFields from '$lib/components/CustomerFields.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import { formatCents, formatTaxRate } from '$lib/pricing/engine';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 	const view = $derived(data.view);
+	let creatingCustomer = $state(false);
+	let attachId = $state('');
 
 	const dateFmt = new Intl.DateTimeFormat('en-US', {
 		weekday: 'short',
@@ -30,7 +34,13 @@
 <div class="flex flex-wrap items-start justify-between gap-3">
 	<div>
 		<h1 class="heading-display text-3xl">
-			{data.evaluation.customerName ?? 'Walk-up quote'}
+			{#if data.evaluation.customerId}
+				<a href="/app/customers/{data.evaluation.customerId}" class="hover:underline">
+					{data.evaluation.customerName ?? 'Customer'}
+				</a>
+			{:else}
+				{data.evaluation.customerName ?? 'Walk-up quote'}
+			{/if}
 		</h1>
 		<p class="text-ink-500 mt-1 text-sm">
 			{data.evaluation.sheetName} · {dateFmt.format(new Date(data.evaluation.createdAt))}
@@ -44,6 +54,52 @@
 		</div>
 	{/if}
 </div>
+
+{#if !data.evaluation.customerId}
+	<!-- Walk-up quote: attach or create the customer after the fact -->
+	<div class="card border-brand-300 mt-6 p-5">
+		<h2 class="heading-display text-lg">Who was this for?</h2>
+		<p class="text-ink-500 mt-0.5 text-sm">
+			Attach a customer so this quote shows up on their record.
+		</p>
+
+		{#if form?.message}
+			<p class="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+				{form.message}
+			</p>
+		{/if}
+
+		{#if !creatingCustomer}
+			<div class="mt-4 flex flex-col gap-2 sm:flex-row">
+				{#if data.attachableCustomers.length}
+					<form method="POST" action="?/attachCustomer" class="flex flex-1 gap-2" use:enhance>
+						<select name="customerId" bind:value={attachId} class="field flex-1" required>
+							<option value="">— Pick an existing customer —</option>
+							{#each data.attachableCustomers as customer (customer.id)}
+								<option value={customer.id}>{customer.name}</option>
+							{/each}
+						</select>
+						<button type="submit" disabled={!attachId} class="btn-dark">Attach</button>
+					</form>
+				{/if}
+				<button type="button" class="btn-outline" onclick={() => (creatingCustomer = true)}>
+					<Icon name="plus" size={18} />
+					New customer
+				</button>
+			</div>
+		{:else}
+			<form method="POST" action="?/createAndAttach" class="mt-4 space-y-4" use:enhance>
+				<CustomerFields />
+				<div class="flex gap-2">
+					<button type="button" class="btn-ghost" onclick={() => (creatingCustomer = false)}>
+						Cancel
+					</button>
+					<button type="submit" class="btn-primary flex-1">Save & attach</button>
+				</div>
+			</form>
+		{/if}
+	</div>
+{/if}
 
 <!-- Itemized ticket -->
 <div class="card mt-6 overflow-x-auto">
