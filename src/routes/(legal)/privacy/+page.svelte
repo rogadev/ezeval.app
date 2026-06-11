@@ -1,3 +1,7 @@
+<script lang="ts">
+	import ObfuscatedEmail from '$lib/components/ObfuscatedEmail.svelte';
+</script>
+
 <svelte:head>
 	<title>Privacy Policy — EzEval</title>
 	<meta name="description" content="Privacy Policy for EzEval, a product of Roga Digital." />
@@ -97,5 +101,5 @@
 
 <h2>Contact</h2>
 <p>
-	Privacy questions or requests: <a href="mailto:support@ezeval.app">support@ezeval.app</a>.
+	Privacy questions or requests: <ObfuscatedEmail />.
 </p>

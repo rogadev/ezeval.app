@@ -1,3 +1,7 @@
+<script lang="ts">
+	import ObfuscatedEmail from '$lib/components/ObfuscatedEmail.svelte';
+</script>
+
 <svelte:head>
 	<title>Terms of Service — EzEval</title>
 	<meta name="description" content="Terms of Service for EzEval, a product of Roga Digital." />
@@ -89,5 +93,5 @@
 <h2>10. Contact</h2>
 <p>
 	Questions about these terms? Email
-	<a href="mailto:support@ezeval.app">support@ezeval.app</a>.
+	<ObfuscatedEmail />.
 </p>
