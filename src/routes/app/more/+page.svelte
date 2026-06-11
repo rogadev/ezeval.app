@@ -43,3 +43,10 @@
 		</button>
 	</form>
 </div>
+
+<p class="text-ink-400 mt-8 text-center text-xs">
+	© {new Date().getFullYear()} Roga Digital ·
+	<a href="/terms" class="underline underline-offset-2">Terms</a>
+	·
+	<a href="/privacy" class="underline underline-offset-2">Privacy</a>
+</p>

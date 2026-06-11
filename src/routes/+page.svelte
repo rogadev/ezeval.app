@@ -242,8 +242,10 @@
 <!-- FOOTER -->
 <footer class="bg-ink-950 text-ink-400 py-10 text-sm">
 	<div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
-		<p>© {new Date().getFullYear()} EzEval · ezeval.app</p>
+		<p>© {new Date().getFullYear()} Roga Digital. All rights reserved.</p>
 		<div class="flex gap-5">
+			<a href="/terms" class="hover:text-paper">Terms</a>
+			<a href="/privacy" class="hover:text-paper">Privacy</a>
 			<a href="/login" class="hover:text-paper">Sign in</a>
 			<a href="/signup" class="hover:text-paper">Create account</a>
 		</div>
