@@ -49,15 +49,18 @@
 <div class="card mt-6 overflow-x-auto">
 	<table class="w-full text-left">
 		<thead>
-			<tr class="border-ink-200 text-ink-500 border-b-2">
-				<th class="field-label px-4 py-3">Height</th>
-				<th class="field-label px-4 py-3">Item</th>
+			<!-- field-label can't be used here: its display:block breaks <th> layout -->
+			<tr
+				class="border-ink-200 text-ink-500 font-display border-b-2 text-sm font-semibold tracking-wide uppercase"
+			>
+				<th class="px-4 py-3">Height</th>
+				<th class="px-4 py-3">Item</th>
 				{#if view.priceVisibility === 'full'}
-					<th class="field-label px-4 py-3 text-right">Each</th>
+					<th class="px-4 py-3 text-right">Each</th>
 				{/if}
-				<th class="field-label px-4 py-3 text-right"># of</th>
+				<th class="px-4 py-3 text-right"># of</th>
 				{#if view.priceVisibility === 'full'}
-					<th class="field-label px-4 py-3 text-right">Price</th>
+					<th class="px-4 py-3 text-right">Price</th>
 				{/if}
 			</tr>
 		</thead>
