@@ -8,15 +8,17 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = requireUser(locals);
+	const isAdmin = user.role === 'admin';
 	const sheets = await listSheets(user.businessId);
 	return {
 		sheets: sheets.map((s) => ({
 			id: s.id,
 			name: s.name,
 			isDefault: s.isDefault,
-			setupFeeEnabled: s.setupFeeEnabled,
 			estimatorVisibility: s.estimatorVisibility,
-			minimumCents: s.minimumCents
+			// Dollar-bearing settings are admin-only (a metrics-only sheet must
+			// never put a figure like the $150 minimum in front of field staff).
+			...(isAdmin ? { setupFeeEnabled: s.setupFeeEnabled, minimumCents: s.minimumCents } : {})
 		}))
 	};
 };

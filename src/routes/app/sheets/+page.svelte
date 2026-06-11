@@ -37,7 +37,7 @@
 					{sheet.estimatorVisibility === 'metrics_only' ? 'Metrics only' : 'Grand total'} for field
 					staff
 				</span>
-				{#if sheet.minimumCents > 0}
+				{#if sheet.minimumCents !== undefined && sheet.minimumCents > 0}
 					<span class="num font-normal">min {formatCents(sheet.minimumCents)}</span>
 				{/if}
 				{#if sheet.setupFeeEnabled}
