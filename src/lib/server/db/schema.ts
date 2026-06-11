@@ -74,6 +74,26 @@ export const businesses = pgTable('businesses', {
 	updatedAt: updatedAt()
 });
 
+/**
+ * Per-business sales tax profile (e.g. GST 5%, PST 7%, or a single HST line).
+ * Rates are stored as integer milli-percent (5% = 5000, 9.975% = 9975) so
+ * three-decimal rates like Quebec's QST stay exact. Taxes apply in parallel
+ * (Canadian style), not compounded.
+ */
+export const businessTaxes = pgTable(
+	'business_taxes',
+	{
+		id: id(),
+		businessId: text('business_id')
+			.notNull()
+			.references(() => businesses.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		rateMilliPct: integer('rate_milli_pct').notNull(),
+		position: integer('position').notNull()
+	},
+	(table) => [index('business_taxes_business_idx').on(table.businessId)]
+);
+
 // ---------------------------------------------------------------------------
 // Better Auth core tables (+ tenant fields on user)
 // ---------------------------------------------------------------------------
@@ -357,6 +377,22 @@ export const evaluations = pgTable(
 		index('evaluations_business_id_idx').on(table.businessId),
 		index('evaluations_created_by_idx').on(table.createdBy)
 	]
+);
+
+/** Tax lines snapshotted at save time so later tax-profile edits never alter past quotes. */
+export const evaluationTaxes = pgTable(
+	'evaluation_taxes',
+	{
+		id: id(),
+		evaluationId: text('evaluation_id')
+			.notNull()
+			.references(() => evaluations.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		rateMilliPct: integer('rate_milli_pct').notNull(),
+		amountCents: integer('amount_cents').notNull(),
+		position: integer('position').notNull()
+	},
+	(table) => [index('evaluation_taxes_evaluation_idx').on(table.evaluationId)]
 );
 
 export const evaluationItems = pgTable(

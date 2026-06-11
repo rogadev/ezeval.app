@@ -1,10 +1,17 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { customers, evaluations, evaluationItems, jobs } from '$lib/server/db/schema';
+import {
+	businessTaxes,
+	customers,
+	evaluations,
+	evaluationItems,
+	evaluationTaxes,
+	jobs
+} from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
 import { getSheetWithGrid } from '$lib/server/sheets';
-import { computeEvaluation, type EvaluationInputItem } from '$lib/pricing/engine';
+import { computeEvaluation, computeTaxes, type EvaluationInputItem } from '$lib/pricing/engine';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params, url }) => {
@@ -141,6 +148,25 @@ export const actions: Actions = {
 				notes
 			})
 			.returning({ id: evaluations.id });
+
+		// Snapshot the business tax profile against the floored total.
+		const taxProfile = await db
+			.select({ name: businessTaxes.name, rateMilliPct: businessTaxes.rateMilliPct })
+			.from(businessTaxes)
+			.where(eq(businessTaxes.businessId, user.businessId))
+			.orderBy(asc(businessTaxes.position));
+		const taxed = computeTaxes(computed.totalCents, taxProfile);
+		if (taxed.taxes.length) {
+			await db.insert(evaluationTaxes).values(
+				taxed.taxes.map((tax, index) => ({
+					evaluationId: saved.id,
+					name: tax.name,
+					rateMilliPct: tax.rateMilliPct,
+					amountCents: tax.amountCents,
+					position: index
+				}))
+			);
+		}
 
 		if (computed.items.length) {
 			await db.insert(evaluationItems).values(

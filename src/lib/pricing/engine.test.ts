@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { computeEvaluation, redactForViewer, formatCents } from './engine';
+import {
+	computeEvaluation,
+	computeTaxes,
+	formatTaxRate,
+	redactForViewer,
+	formatCents
+} from './engine';
 import type { EvaluationInputItem, SheetPricingConfig } from './engine';
 
 const baseSheet: SheetPricingConfig = {
@@ -194,5 +200,48 @@ describe('redactForViewer', () => {
 		expect(json).not.toContain('1200');
 		expect(json).not.toContain('15000');
 		expect(json).not.toContain('2250');
+	});
+});
+
+describe('computeTaxes', () => {
+	it('computes a single GST line (5% of $150 = $7.50)', () => {
+		const result = computeTaxes(15000, [{ name: 'GST', rateMilliPct: 5000 }]);
+		expect(result.taxes).toEqual([{ name: 'GST', rateMilliPct: 5000, amountCents: 750 }]);
+		expect(result.taxTotalCents).toBe(750);
+		expect(result.totalWithTaxCents).toBe(15750);
+	});
+
+	it('applies multiple taxes in parallel, not compounded (GST 5% + PST 7%)', () => {
+		const result = computeTaxes(10000, [
+			{ name: 'GST', rateMilliPct: 5000 },
+			{ name: 'PST', rateMilliPct: 7000 }
+		]);
+		expect(result.taxes[0].amountCents).toBe(500);
+		expect(result.taxes[1].amountCents).toBe(700); // 7% of base, not of base+GST
+		expect(result.totalWithTaxCents).toBe(11200);
+	});
+
+	it('handles three-decimal rates with half-up rounding (QST 9.975% of $100)', () => {
+		const result = computeTaxes(10000, [{ name: 'QST', rateMilliPct: 9975 }]);
+		expect(result.taxes[0].amountCents).toBe(998); // 997.5 rounds up
+	});
+
+	it('returns no lines and an unchanged total with an empty profile', () => {
+		const result = computeTaxes(15000, []);
+		expect(result.taxes).toEqual([]);
+		expect(result.taxTotalCents).toBe(0);
+		expect(result.totalWithTaxCents).toBe(15000);
+	});
+
+	it('rejects negative or non-integer inputs', () => {
+		expect(() => computeTaxes(-1, [])).toThrow(RangeError);
+		expect(() => computeTaxes(100, [{ name: 'GST', rateMilliPct: -5 }])).toThrow(RangeError);
+		expect(() => computeTaxes(100, [{ name: 'GST', rateMilliPct: 50.5 }])).toThrow(RangeError);
+	});
+
+	it('formats milli-percent rates for display', () => {
+		expect(formatTaxRate(5000)).toBe('5%');
+		expect(formatTaxRate(9975)).toBe('9.975%');
+		expect(formatTaxRate(13000)).toBe('13%');
 	});
 });

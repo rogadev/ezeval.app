@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
-	import { formatCents } from '$lib/pricing/engine';
+	import { formatCents, formatTaxRate } from '$lib/pricing/engine';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -113,6 +113,23 @@
 		{/if}
 	</table>
 </div>
+
+{#if view.totalCents !== undefined && data.taxes.length}
+	<div class="card mt-4 px-4 py-3">
+		<div class="divide-ink-100 divide-y">
+			{#each data.taxes as tax (tax.name + tax.rateMilliPct)}
+				<div class="text-ink-600 flex items-center justify-between py-1.5 text-sm">
+					<span>{tax.name} ({formatTaxRate(tax.rateMilliPct)})</span>
+					<span class="num">{formatCents(tax.amountCents)}</span>
+				</div>
+			{/each}
+			<div class="flex items-center justify-between py-2 font-bold">
+				<span>Total with tax</span>
+				<span class="num text-glass-700 text-lg">{formatCents(data.totalWithTaxCents ?? 0)}</span>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <div class="text-ink-500 mt-4 flex items-center justify-between text-sm">
 	<span class="num">{view.unitCount} panes total</span>

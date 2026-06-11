@@ -145,3 +145,49 @@ export function redactForViewer(
 export function formatCents(cents: number): string {
 	return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
+
+// ---------------------------------------------------------------------------
+// Sales taxes — rates as integer milli-percent (5% = 5000, QST 9.975% = 9975)
+// so three-decimal Canadian rates stay exact. Applied in parallel on the same
+// base (GST + PST style), never compounded.
+// ---------------------------------------------------------------------------
+
+export interface TaxLine {
+	name: string;
+	rateMilliPct: number;
+}
+
+export interface ComputedTaxLine extends TaxLine {
+	amountCents: number;
+}
+
+export interface ComputedTaxes {
+	taxes: ComputedTaxLine[];
+	taxTotalCents: number;
+	totalWithTaxCents: number;
+}
+
+export function computeTaxes(baseCents: number, taxLines: TaxLine[]): ComputedTaxes {
+	if (!Number.isInteger(baseCents) || baseCents < 0) {
+		throw new RangeError(`baseCents must be a non-negative integer, got ${baseCents}`);
+	}
+
+	const taxes: ComputedTaxLine[] = taxLines.map((line) => {
+		if (!Number.isInteger(line.rateMilliPct) || line.rateMilliPct < 0) {
+			throw new RangeError(`rateMilliPct must be a non-negative integer, got ${line.rateMilliPct}`);
+		}
+		return {
+			name: line.name,
+			rateMilliPct: line.rateMilliPct,
+			amountCents: Math.round((baseCents * line.rateMilliPct) / 100_000)
+		};
+	});
+
+	const taxTotalCents = taxes.reduce((sum, tax) => sum + tax.amountCents, 0);
+	return { taxes, taxTotalCents, totalWithTaxCents: baseCents + taxTotalCents };
+}
+
+/** Formats a milli-percent rate for display: 5000 -> "5%", 9975 -> "9.975%". */
+export function formatTaxRate(rateMilliPct: number): string {
+	return `${(rateMilliPct / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 })}%`;
+}

@@ -1,5 +1,6 @@
 import { db } from './db';
 import {
+	businessTaxes,
 	priceSheets,
 	priceSheetRows,
 	priceSheetButtons,
@@ -105,4 +106,13 @@ export async function provisionBusinessDefaults(businessId: string): Promise<voi
 			position: index
 		}))
 	);
+
+	// Canadian default tax profile: GST 5% covers every province as a baseline;
+	// owners add PST or swap to HST in Business settings.
+	await db.insert(businessTaxes).values({
+		businessId,
+		name: 'GST',
+		rateMilliPct: 5000,
+		position: 0
+	});
 }

@@ -5,6 +5,7 @@ import {
 	customers,
 	evaluations,
 	evaluationItems,
+	evaluationTaxes,
 	priceSheets,
 	user as userTable
 } from '$lib/server/db/schema';
@@ -70,7 +71,27 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		evaluation.estimatorVisibility ?? 'metrics_only'
 	);
 
+	// Snapshotted tax lines ride along whenever the total itself is visible —
+	// tax rates are public knowledge, so they leak nothing in grand-total mode.
+	const taxRows =
+		view.totalCents !== undefined
+			? await db
+					.select({
+						name: evaluationTaxes.name,
+						rateMilliPct: evaluationTaxes.rateMilliPct,
+						amountCents: evaluationTaxes.amountCents
+					})
+					.from(evaluationTaxes)
+					.where(eq(evaluationTaxes.evaluationId, evaluation.id))
+					.orderBy(asc(evaluationTaxes.position))
+			: [];
+
 	return {
+		taxes: taxRows,
+		totalWithTaxCents:
+			view.totalCents !== undefined
+				? view.totalCents + taxRows.reduce((sum, tax) => sum + tax.amountCents, 0)
+				: undefined,
 		evaluation: {
 			id: evaluation.id,
 			sheetName: evaluation.sheetName,
