@@ -27,7 +27,11 @@
 		{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true }
 	];
 
-	const visibleSecondary = $derived(secondary.filter((i) => !i.adminOnly || isAdmin));
+	const visibleSecondary = $derived(
+		secondary.filter(
+			(i) => (!i.adminOnly || isAdmin) && (i.href !== '/app/billing' || data.billingEnabled)
+		)
+	);
 
 	function isActive(href: string): boolean {
 		if (href === '/app') return page.url.pathname === '/app';
@@ -35,6 +39,7 @@
 	}
 
 	const trialDaysLeft = $derived.by(() => {
+		if (!data.billingEnabled) return null;
 		if (!data.business.trialEndsAt || data.business.subscriptionStatus) return null;
 		const ms = new Date(data.business.trialEndsAt).getTime() - Date.now();
 		return Math.max(0, Math.ceil(ms / 86_400_000));

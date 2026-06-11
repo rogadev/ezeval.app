@@ -107,8 +107,8 @@
 				a field tool your whole crew can use — without ever exposing what's on it.
 			</p>
 			<div class="mt-8 flex flex-wrap items-center gap-3">
-				<a href="/signup" class="btn-primary !min-h-14 !px-8 !text-lg">Start 14-day free trial</a>
-				<span class="text-ink-400 text-sm">then $5/month flat · cancel anytime</span>
+				<a href="/signup" class="btn-primary !min-h-14 !px-8 !text-lg">Get started free</a>
+				<span class="text-ink-400 text-sm">free during early access · $5/month at launch</span>
 			</div>
 		</div>
 
@@ -230,8 +230,10 @@
 				</li>
 			{/each}
 		</ul>
-		<a href="/signup" class="btn-primary mt-8 w-full !text-lg">Start your free trial</a>
-		<p class="text-ink-400 mt-3 text-xs">14 days free. No card required to start.</p>
+		<a href="/signup" class="btn-primary mt-8 w-full !text-lg">Get started free</a>
+		<p class="text-ink-400 mt-3 text-xs">
+			Free during early access — billing turns on later at this rate. No card required.
+		</p>
 	</div>
 </section>
 

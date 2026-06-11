@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { businesses } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
-import { accessState } from '$lib/server/billing';
+import { accessState, billingEnabled } from '$lib/server/billing';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals, url }) => {
@@ -35,6 +35,9 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 	return {
 		user: { id: user.id, name: user.name, email: user.email, role: user.role },
 		business,
-		access
+		access,
+		// Billing is pinned until Stripe is configured (see GH issue) — when
+		// false, the UI hides trial banners and billing nav entirely.
+		billingEnabled: billingEnabled()
 	};
 };

@@ -12,7 +12,7 @@
 			{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },
 			{ href: '/app/settings', label: 'Business info', icon: 'settings', adminOnly: true },
 			{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true }
-		].filter((i) => !i.adminOnly || isAdmin)
+		].filter((i) => (!i.adminOnly || isAdmin) && (i.href !== '/app/billing' || data.billingEnabled))
 	);
 </script>
 

@@ -15,7 +15,7 @@
 
 <AuthCard
 	title="Create your account"
-	subtitle="14-day free trial, then $5/month. Your default price sheet is ready the moment you sign up."
+	subtitle="Free during early access. Your default price sheet is ready the moment you sign up."
 >
 	{#if incomplete}
 		<p class="bg-brand-50 text-brand-900 mt-4 rounded-xl px-4 py-3 text-sm font-medium">
