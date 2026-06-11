@@ -108,7 +108,9 @@
 			</p>
 			<div class="mt-8 flex flex-wrap items-center gap-3">
 				<a href="/signup" class="btn-primary !min-h-14 !px-8 !text-lg">Get started free</a>
-				<span class="text-ink-400 text-sm">free during early access · $5/month at launch</span>
+				<span class="text-ink-400 text-sm">
+					free during early access · $5/mo limited-time launch price
+				</span>
 			</div>
 		</div>
 
@@ -217,13 +219,13 @@
 <!-- PRICING -->
 <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
 	<div class="card mx-auto max-w-lg p-8 text-center">
-		<p class="badge bg-glass-100 text-glass-800">Flat pricing</p>
+		<p class="badge bg-brand-500 text-ink-950">Limited-time launch price</p>
 		<p class="mt-4">
 			<span class="num text-6xl font-bold">$5</span>
 			<span class="text-ink-500">/month per business</span>
 		</p>
 		<ul class="text-ink-600 mx-auto mt-6 max-w-xs space-y-2 text-left text-sm">
-			{#each ['Unlimited price sheets & evaluations', 'Unlimited estimators & technicians', 'Route optimization included', 'No per-seat charges, no tiers'] as line (line)}
+			{#each ['Unlimited price sheets & evaluations', 'Route optimization included', 'Workflow checklists for your crew'] as line (line)}
 				<li class="flex items-start gap-2">
 					<Icon name="check" size={18} class="text-glass-600 mt-0.5 shrink-0" />
 					{line}
@@ -232,7 +234,7 @@
 		</ul>
 		<a href="/signup" class="btn-primary mt-8 w-full !text-lg">Get started free</a>
 		<p class="text-ink-400 mt-3 text-xs">
-			Free during early access — billing turns on later at this rate. No card required.
+			Free during early access, then $5/month promo pricing for a limited time. No card required.
 		</p>
 	</div>
 </section>

@@ -42,8 +42,8 @@
 	{:else if data.billing.status === 'active' || data.billing.status === 'trialing'}
 		<span class="badge bg-glass-100 text-glass-800">Active</span>
 		<p class="mt-3">
-			Your EzEval subscription is active — <span class="num">$5/month</span>, unlimited price
-			sheets, team members, and evaluations.
+			Your EzEval subscription is active — <span class="num">$5/month</span>, unlimited price sheets
+			and evaluations.
 		</p>
 	{:else if data.billing.status === 'past_due'}
 		<span class="badge bg-brand-100 text-brand-900">Payment past due</span>
@@ -89,5 +89,5 @@
 </div>
 
 <p class="text-ink-400 mt-4 text-sm">
-	One flat price. No per-seat charges, no usage tiers — built by a window cleaner, priced like one.
+	Limited-time launch pricing — built by a window cleaner, priced like one.
 </p>
