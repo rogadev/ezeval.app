@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
+	import AuthCard from '$lib/components/AuthCard.svelte';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
@@ -12,96 +13,72 @@
 	<title>Create your account — EzEval</title>
 </svelte:head>
 
-<div class="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
-	<div class="w-full max-w-md">
-		<a href="/" class="mb-8 block text-center text-2xl font-bold tracking-tight text-sky-700">
-			EzEval
-		</a>
-		<div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-			<h1 class="text-xl font-semibold text-slate-900">Create your account</h1>
-			<p class="mt-1 text-sm text-slate-500">
-				14-day free trial, then $5/month. Your default price sheet is ready the moment you sign up.
-			</p>
-
-			{#if incomplete}
-				<p class="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-					Your previous signup didn't finish — please sign up again.
-				</p>
-			{/if}
-			{#if form?.message}
-				<p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{form.message}</p>
-			{/if}
-
-			<form
-				method="POST"
-				class="mt-6 space-y-4"
-				use:enhance={() => {
-					submitting = true;
-					return async ({ update }) => {
-						submitting = false;
-						await update();
-					};
-				}}
-			>
-				<div>
-					<label for="name" class="block text-sm font-medium text-slate-700">Your name</label>
-					<input
-						id="name"
-						name="name"
-						type="text"
-						required
-						value={form?.name ?? ''}
-						class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500"
-					/>
-				</div>
-				<div>
-					<label for="businessName" class="block text-sm font-medium text-slate-700">
-						Business name
-					</label>
-					<input
-						id="businessName"
-						name="businessName"
-						type="text"
-						required
-						value={form?.businessName ?? ''}
-						class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500"
-					/>
-				</div>
-				<div>
-					<label for="email" class="block text-sm font-medium text-slate-700">Email</label>
-					<input
-						id="email"
-						name="email"
-						type="email"
-						required
-						value={form?.email ?? ''}
-						class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500"
-					/>
-				</div>
-				<div>
-					<label for="password" class="block text-sm font-medium text-slate-700">Password</label>
-					<input
-						id="password"
-						name="password"
-						type="password"
-						required
-						minlength="8"
-						class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500"
-					/>
-					<p class="mt-1 text-xs text-slate-400">At least 8 characters.</p>
-				</div>
-				<button
-					type="submit"
-					disabled={submitting}
-					class="w-full rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
-				>
-					{submitting ? 'Creating account…' : 'Create account'}
-				</button>
-			</form>
-		</div>
-		<p class="mt-6 text-center text-sm text-slate-500">
-			Already have an account?
-			<a href="/login" class="font-medium text-sky-700 hover:underline">Sign in</a>
+<AuthCard
+	title="Create your account"
+	subtitle="14-day free trial, then $5/month. Your default price sheet is ready the moment you sign up."
+>
+	{#if incomplete}
+		<p class="bg-brand-50 text-brand-900 mt-4 rounded-xl px-4 py-3 text-sm font-medium">
+			Your previous signup didn't finish — please sign up again.
 		</p>
-	</div>
-</div>
+	{/if}
+	{#if form?.message}
+		<p class="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+			{form.message}
+		</p>
+	{/if}
+
+	<form
+		method="POST"
+		class="mt-6 space-y-4"
+		use:enhance={() => {
+			submitting = true;
+			return async ({ update }) => {
+				submitting = false;
+				await update();
+			};
+		}}
+	>
+		<div>
+			<label for="name" class="field-label">Your name</label>
+			<input id="name" name="name" type="text" required value={form?.name ?? ''} class="field" />
+		</div>
+		<div>
+			<label for="businessName" class="field-label">Business name</label>
+			<input
+				id="businessName"
+				name="businessName"
+				type="text"
+				required
+				value={form?.businessName ?? ''}
+				class="field"
+			/>
+		</div>
+		<div>
+			<label for="email" class="field-label">Email</label>
+			<input
+				id="email"
+				name="email"
+				type="email"
+				required
+				value={form?.email ?? ''}
+				class="field"
+			/>
+		</div>
+		<div>
+			<label for="password" class="field-label">Password</label>
+			<input id="password" name="password" type="password" required minlength="8" class="field" />
+			<p class="text-ink-400 mt-1 text-xs">At least 8 characters.</p>
+		</div>
+		<button type="submit" disabled={submitting} class="btn-primary w-full">
+			{submitting ? 'Creating account…' : 'Create account'}
+		</button>
+	</form>
+
+	{#snippet footer()}
+		Already have an account?
+		<a href="/login" class="text-ink-800 font-semibold underline decoration-2 underline-offset-2">
+			Sign in
+		</a>
+	{/snippet}
+</AuthCard>

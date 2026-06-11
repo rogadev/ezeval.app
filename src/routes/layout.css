@@ -1,2 +1,148 @@
+/* EzEval design system — "High-Vis Trade Kit"
+ *
+ * Built for field use: outdoor sunlight (high contrast), gloved/wet hands
+ * (oversized targets), and fast repeated tapping (tactile pressed states).
+ * Paper-white surfaces like an estimate pad, ink-blue structure, and a single
+ * high-visibility amber accent. Numbers are always mono + tabular so prices
+ * read like a price board.
+ */
+
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fontsource/barlow-condensed/500.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/spline-sans-mono/400.css';
+@import '@fontsource/spline-sans-mono/500.css';
+@import '@fontsource/spline-sans-mono/600.css';
+@import '@fontsource/spline-sans-mono/700.css';
+
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
+
+@theme {
+	--font-sans: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+	--font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
+	--font-mono: 'Spline Sans Mono', ui-monospace, monospace;
+
+	/* Ink — deep blue-slate structure */
+	--color-ink-50: #f4f6f8;
+	--color-ink-100: #e8ecf1;
+	--color-ink-200: #d5dce4;
+	--color-ink-300: #b3bfcd;
+	--color-ink-400: #8b9cb0;
+	--color-ink-500: #6a7e95;
+	--color-ink-600: #51647a;
+	--color-ink-700: #405064;
+	--color-ink-800: #2c3a4a;
+	--color-ink-900: #1d2936;
+	--color-ink-950: #131c26;
+
+	/* Brand — high-visibility amber (safety-vest) */
+	--color-brand-50: #fff8eb;
+	--color-brand-100: #ffedc6;
+	--color-brand-200: #ffd98a;
+	--color-brand-300: #ffbf4d;
+	--color-brand-400: #fba81f;
+	--color-brand-500: #f59006;
+	--color-brand-600: #cf6f04;
+	--color-brand-700: #a85607;
+	--color-brand-800: #88450e;
+	--color-brand-900: #70390f;
+	--color-brand-950: #401d04;
+
+	/* Glass — washed teal for success/money-positive accents */
+	--color-glass-50: #effaf8;
+	--color-glass-100: #d7f4ef;
+	--color-glass-200: #b2e8e0;
+	--color-glass-300: #84d5cc;
+	--color-glass-400: #4fbab0;
+	--color-glass-500: #349e96;
+	--color-glass-600: #27807b;
+	--color-glass-700: #236663;
+	--color-glass-800: #205250;
+	--color-glass-900: #1e4443;
+	--color-glass-950: #0c2625;
+
+	/* Paper — warm estimate-pad background */
+	--color-paper: #f8f7f3;
+}
+
+@layer base {
+	html {
+		background-color: var(--color-paper);
+		color: var(--color-ink-900);
+		font-family: var(--font-sans);
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	::selection {
+		background-color: var(--color-brand-200);
+		color: var(--color-ink-950);
+	}
+
+	:focus-visible {
+		outline: 3px solid var(--color-brand-500);
+		outline-offset: 2px;
+	}
+}
+
+/* Oversized tactile button base: 48px+ targets, pressed-state drop */
+@utility btn {
+	@apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition-all duration-100 select-none active:translate-y-0.5 disabled:pointer-events-none disabled:opacity-50;
+}
+@utility btn-primary {
+	@apply btn bg-brand-500 text-ink-950 shadow-[0_3px_0_0_var(--color-brand-700)] hover:bg-brand-400 active:shadow-[0_1px_0_0_var(--color-brand-700)];
+}
+@utility btn-dark {
+	@apply btn bg-ink-900 text-paper shadow-[0_3px_0_0_var(--color-ink-950)] hover:bg-ink-800 active:shadow-[0_1px_0_0_var(--color-ink-950)];
+}
+@utility btn-outline {
+	@apply btn border-2 border-ink-300 bg-white text-ink-800 hover:border-ink-500 hover:bg-ink-50;
+}
+@utility btn-ghost {
+	@apply btn text-ink-600 hover:bg-ink-100 hover:text-ink-900;
+}
+@utility btn-danger {
+	@apply btn bg-red-600 text-white shadow-[0_3px_0_0_var(--color-red-800)] hover:bg-red-500 active:shadow-[0_1px_0_0_var(--color-red-800)];
+}
+
+/* Form fields: big targets, ink borders, amber focus */
+@utility field {
+	@apply block w-full rounded-xl border-2 border-ink-200 bg-white px-4 py-3 text-base text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-0;
+}
+@utility field-label {
+	@apply font-display mb-1.5 block text-sm font-semibold tracking-wide text-ink-700 uppercase;
+}
+
+/* Paper card with print-like hard shadow */
+@utility card {
+	@apply rounded-2xl border-2 border-ink-200 bg-white shadow-[0_4px_0_-1px_var(--color-ink-200)];
+}
+
+/* Section heading: condensed signage caps */
+@utility heading-display {
+	@apply font-display font-bold tracking-wide text-ink-900 uppercase;
+}
+
+/* Money/metrics: tabular mono */
+@utility num {
+	@apply font-mono font-semibold tabular-nums;
+}
+
+/* Hazard chip for animal/property warnings: high-vis striped edge */
+@utility chip-hazard {
+	@apply border-brand-500 bg-brand-100 text-brand-950 inline-flex items-center gap-1.5 rounded-lg border-2 px-2.5 py-1 text-sm font-bold;
+	background-image: repeating-linear-gradient(
+		-45deg,
+		transparent 0 6px,
+		color-mix(in oklab, var(--color-brand-300) 45%, transparent) 6px 12px
+	);
+}
+
+/* Status badges */
+@utility badge {
+	@apply font-display inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold tracking-wider uppercase;
+}
