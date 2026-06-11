@@ -5,6 +5,7 @@ import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { businesses, user } from '$lib/server/db/schema';
 import { provisionBusinessDefaults } from '$lib/server/provision';
+import { billingEnabled } from '$lib/server/billing';
 import type { Actions, PageServerLoad } from './$types';
 
 const TRIAL_DAYS = 14;
@@ -58,6 +59,8 @@ export const actions: Actions = {
 			.where(eq(user.id, newUserId));
 		await provisionBusinessDefaults(business.id);
 
-		redirect(303, '/app');
+		// While Stripe is pinned (GH issue #3), new owners get a founding-member
+		// welcome instead of the future card-up-front trial flow.
+		redirect(303, billingEnabled() ? '/app' : '/app/welcome');
 	}
 };
