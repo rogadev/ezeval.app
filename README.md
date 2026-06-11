@@ -1,46 +1,42 @@
-# EzEval
+# sv
 
-Quickly, easily, and accurately quote window cleaning jobs. This project was built using vanilla JavaScript, HTML, and CSS as part of a school project. A [new version](https://github.com/rogadev/ezeval.app) will replace it soon, built with SvelteKit.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Demo link:
+## Creating a project
 
-Access it live at [https://ezeval.app](https://www.ezeval.app/)
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Table of Content:
+```sh
+# create a new project
+npx sv create my-app
+```
 
-- [About The App](#about-the-app)
-- [Screenshots](#screenshots)
-- [Technologies](#technologies)
-- [Setup](#setup)
-- [Status](#status)
+To recreate this project with the same configuration:
 
-## About The App
+```sh
+# recreate this project
+npx sv@0.16.1 create --template minimal --types ts --add prettier eslint vitest="usages:unit" tailwindcss="plugins:forms" drizzle="database:postgresql+postgresql:neon" sveltekit-adapter="adapter:vercel" --install npm .
+```
 
-EzEval is a web app that I wanted to build for my own exterior cleaning company, MossAway Services Inc.. At the time, there was nothing that did what I wanted it to do, how I wanted it done. So, I built it myself.
+## Developing
 
-In the newer version built with SvelteKit, I've added user authentication and database storage. This allows users to save their quotes and access them later. It also allows users to create different price sheets for different types of job. For example, a user can create a price sheet for residential window cleaning, and another for commercial window cleaning. The user can then select which price sheet to use when creating a quote.
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-The newer version will also allow users to create employee profiles. These profiles can produce a quote using metrics, but doesn't allow them to see the price sheet. This allows users to send their employees to quote jobs without giving them the tools to go out on their own and start bidding jobs the same way.
+```sh
+npm run dev
 
-## Screenshots
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-### Capture project metrics
+## Building
 
-`![Create a quote screenshot](./readme/images/screencapture-ezeval-app.png)`
+To create a production version of your app:
 
-### Adjust price sheet
+```sh
+npm run build
+```
 
-`![Adjust price sheet screenshot](./readme/images/screencapture-ezeval-app-2.png)`
+You can preview the production build with `npm run preview`.
 
-## Technologies
-
-I used vanilla `html`, `css`, and `javascript` to build this project. Updates to the main branch are automatically pushed to the live site using `vercel`.
-
-## Setup
-
-- download or clone the repository
-- use live server to view the project in your browser
-
-## Status
-
-This version of [EzEval] is deprecated. `Version 2` will be out soon. It will be built with `SvelteKit` and will include user authentication and database storage. Find it [here](https://github.com/rogadev/ezeval.app) on GitHub.
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
