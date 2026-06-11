@@ -109,6 +109,12 @@
 		<button type="submit" disabled={submitting} class="btn-primary w-full">
 			{submitting ? 'Creating account…' : 'Create account'}
 		</button>
+		<p class="text-ink-400 text-center text-xs">
+			By creating an account you agree to the
+			<a href="/terms" class="underline underline-offset-2">Terms of Service</a>
+			and
+			<a href="/privacy" class="underline underline-offset-2">Privacy Policy</a>.
+		</p>
 	</form>
 
 	{#snippet footer()}
