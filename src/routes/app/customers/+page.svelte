@@ -7,7 +7,6 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 	// ?new=1 (e.g. from the dashboard quick action) opens the form right away.
-	// svelte-ignore state_referenced_locally
 	let adding = $state(page.url.searchParams.has('new'));
 	let search = $state('');
 
