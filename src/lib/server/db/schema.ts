@@ -70,6 +70,10 @@ export const businesses = pgTable('businesses', {
 	stripeSubscriptionId: text('stripe_subscription_id'),
 	subscriptionStatus: text('subscription_status'), // Stripe status string, null = never subscribed
 	trialEndsAt: timestamp('trial_ends_at'),
+	// Comped businesses get full paid access without a Stripe subscription
+	// (owner demo/showcase account, internal use). Excluded from paying-user
+	// and revenue metrics so the numbers stay honest.
+	comped: boolean('comped').default(false).notNull(),
 	createdAt: createdAt(),
 	updatedAt: updatedAt()
 });

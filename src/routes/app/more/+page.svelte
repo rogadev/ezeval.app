@@ -5,15 +5,37 @@
 	let { data }: { data: LayoutData } = $props();
 	const isAdmin = $derived(data.user.role === 'admin');
 
+	type MoreItem = {
+		href: string;
+		label: string;
+		icon: string;
+		adminOnly: boolean;
+		ownerOnly?: boolean;
+	};
+
 	const items = $derived(
-		[
-			{ href: '/app/tasks', label: 'Jobs', icon: 'briefcase', adminOnly: false },
-			{ href: '/app/customers', label: 'Customers', icon: 'users', adminOnly: false },
-			{ href: '/app/team', label: 'Team', icon: 'users', adminOnly: true },
-			{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },
-			{ href: '/app/settings', label: 'Business info', icon: 'settings', adminOnly: true },
-			{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true }
-		].filter((i) => (!i.adminOnly || isAdmin) && (i.href !== '/app/billing' || data.billingEnabled))
+		(
+			[
+				{ href: '/app/tasks', label: 'Jobs', icon: 'briefcase', adminOnly: false },
+				{ href: '/app/customers', label: 'Customers', icon: 'users', adminOnly: false },
+				{ href: '/app/team', label: 'Team', icon: 'users', adminOnly: true },
+				{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },
+				{ href: '/app/settings', label: 'Business info', icon: 'settings', adminOnly: true },
+				{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true },
+				{
+					href: '/app/admin',
+					label: 'Admin metrics',
+					icon: 'chart',
+					adminOnly: true,
+					ownerOnly: true
+				}
+			] satisfies MoreItem[]
+		).filter(
+			(i) =>
+				(!i.adminOnly || isAdmin) &&
+				(!i.ownerOnly || data.isOwner) &&
+				(i.href !== '/app/billing' || data.billingEnabled)
+		)
 	);
 </script>
 

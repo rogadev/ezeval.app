@@ -8,7 +8,13 @@
 
 	const isAdmin = $derived(data.user.role === 'admin');
 
-	type NavItem = { href: string; label: string; icon: string; adminOnly?: boolean };
+	type NavItem = {
+		href: string;
+		label: string;
+		icon: string;
+		adminOnly?: boolean;
+		ownerOnly?: boolean;
+	};
 
 	// Primary nav: the 5 most field-relevant destinations live in the mobile
 	// bottom bar; everything else is under /app/more (and always visible in
@@ -25,12 +31,16 @@
 		{ href: '/app/team', label: 'Team', icon: 'users', adminOnly: true },
 		{ href: '/app/workflows', label: 'Workflows', icon: 'workflow', adminOnly: true },
 		{ href: '/app/settings', label: 'Business', icon: 'settings', adminOnly: true },
-		{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true }
+		{ href: '/app/billing', label: 'Billing', icon: 'billing', adminOnly: true },
+		{ href: '/app/admin', label: 'Admin', icon: 'chart', ownerOnly: true }
 	];
 
 	const visibleSecondary = $derived(
 		secondary.filter(
-			(i) => (!i.adminOnly || isAdmin) && (i.href !== '/app/billing' || data.billingEnabled)
+			(i) =>
+				(!i.adminOnly || isAdmin) &&
+				(!i.ownerOnly || data.isOwner) &&
+				(i.href !== '/app/billing' || data.billingEnabled)
 		)
 	);
 
