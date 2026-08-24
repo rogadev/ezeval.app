@@ -47,6 +47,37 @@ export async function createPortalSession(stripeCustomerId: string): Promise<str
 	return session.url;
 }
 
+/**
+ * Live monthly recurring revenue in integer cents, summed from Stripe's active
+ * subscriptions and normalized to a monthly figure (yearly plans divided by 12).
+ * Returns null when billing is unconfigured or Stripe can't be reached, so the
+ * dashboard can show "unavailable" rather than a misleading zero.
+ */
+export async function monthlyRecurringRevenueCents(): Promise<number | null> {
+	if (!billingEnabled()) return null;
+	try {
+		let total = 0;
+		for await (const sub of stripe().subscriptions.list({ status: 'active', limit: 100 })) {
+			for (const item of sub.items.data) {
+				const price = item.price;
+				const unit = price.unit_amount ?? 0;
+				const qty = item.quantity ?? 1;
+				const interval = price.recurring?.interval;
+				const count = price.recurring?.interval_count ?? 1;
+				let monthly = unit * qty;
+				if (interval === 'year') monthly = Math.round(monthly / (12 * count));
+				else if (interval === 'week') monthly = Math.round((monthly * 52) / (12 * count));
+				else if (interval === 'day') monthly = Math.round((monthly * 365) / (12 * count));
+				else if (interval === 'month') monthly = Math.round(monthly / count);
+				total += monthly;
+			}
+		}
+		return total;
+	} catch {
+		return null;
+	}
+}
+
 export type AccessState = 'ok' | 'trial' | 'locked';
 
 /**
@@ -58,8 +89,11 @@ export type AccessState = 'ok' | 'trial' | 'locked';
 export function accessState(business: {
 	subscriptionStatus: string | null;
 	trialEndsAt: Date | null;
+	comped?: boolean | null;
 }): AccessState {
 	if (!billingEnabled()) return 'ok';
+	// Comped businesses (owner demo, internal) are entitled without Stripe.
+	if (business.comped) return 'ok';
 	const status = business.subscriptionStatus;
 	if (status === 'active' || status === 'trialing' || status === 'past_due') return 'ok';
 	if (!status && business.trialEndsAt && business.trialEndsAt.getTime() > Date.now()) {

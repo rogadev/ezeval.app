@@ -2,7 +2,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { businesses } from '$lib/server/db/schema';
-import { requireUser } from '$lib/server/guard';
+import { isOwner, requireUser } from '$lib/server/guard';
 import { accessState, billingEnabled } from '$lib/server/billing';
 import type { LayoutServerLoad } from './$types';
 
@@ -14,7 +14,8 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 			id: businesses.id,
 			name: businesses.name,
 			subscriptionStatus: businesses.subscriptionStatus,
-			trialEndsAt: businesses.trialEndsAt
+			trialEndsAt: businesses.trialEndsAt,
+			comped: businesses.comped
 		})
 		.from(businesses)
 		.where(eq(businesses.id, user.businessId));
@@ -34,6 +35,7 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 
 	return {
 		user: { id: user.id, name: user.name, email: user.email, role: user.role },
+		isOwner: isOwner(user),
 		business,
 		access,
 		// Billing is pinned until Stripe is configured (see GH issue) — when
