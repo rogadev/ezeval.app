@@ -40,6 +40,8 @@
 	});
 
 	function tap(button: ButtonRef) {
+		// A new count has started, so undoing "Start over" would overwrite it.
+		cleared = null;
 		counts[button.id] = (counts[button.id] ?? 0) + 1;
 		if (navigator.vibrate) navigator.vibrate(10);
 	}
@@ -84,6 +86,7 @@
 			// Storage is unavailable (private mode, blocked): capture still works, unsaved.
 		}
 		draftLoaded = true;
+		return () => clearTimeout(undoTimer);
 	});
 
 	$effect(() => {
@@ -105,10 +108,27 @@
 		}
 	}
 
+	// "Start over" keeps the cleared count for a few seconds so one stray tap
+	// can't throw away a walk-through.
+	const UNDO_MS = 10_000;
+	let cleared = $state<{ counts: Record<string, number>; notes: string } | null>(null);
+	let undoTimer: ReturnType<typeof setTimeout> | undefined;
+
 	function startOver() {
+		cleared = { counts: $state.snapshot(counts), notes };
 		counts = {};
 		notes = '';
 		restored = false;
+		clearTimeout(undoTimer);
+		undoTimer = setTimeout(() => (cleared = null), UNDO_MS);
+	}
+
+	function undoStartOver() {
+		if (!cleared) return;
+		counts = cleared.counts;
+		notes = cleared.notes;
+		cleared = null;
+		clearTimeout(undoTimer);
 	}
 </script>
 
@@ -152,9 +172,15 @@
 		role="status"
 	>
 		<span>Picked up your unsaved count from earlier.</span>
-		<button type="button" class="font-semibold underline underline-offset-2" onclick={startOver}>
-			Start over
-		</button>
+		<button type="button" class="btn-outline btn-sm" onclick={startOver}>Start over</button>
+	</div>
+{:else if cleared}
+	<div
+		class="bg-ink-100 text-ink-900 mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl px-4 py-3 text-sm font-medium"
+		role="status"
+	>
+		<span>Count cleared.</span>
+		<button type="button" class="btn-outline btn-sm" onclick={undoStartOver}>Undo</button>
 	</div>
 {/if}
 
