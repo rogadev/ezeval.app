@@ -22,9 +22,12 @@ export interface SampleSheet {
 }
 
 /**
- * The example sheet behind the public demo and price calculator. It mirrors
- * the starter sheet every new business gets, so what a visitor taps on the
- * marketing site is what they find after signing up.
+ * The founder's original 2021 reference sheet (spec §4.2), recovered from the
+ * old app's default_pricing.js. It is the one source for both the public demo
+ * and price calculator and the starter sheet every new business gets
+ * (`provisionBusinessDefaults`), so what a visitor taps on the marketing site
+ * is what they find after signing up. Setup is not a button: the sheet uses
+ * the auto-attaching setup fee ($22.50) so nobody has to remember to tap it.
  */
 export const SAMPLE_SHEET: SampleSheet = {
 	setupFeeEnabled: true,
