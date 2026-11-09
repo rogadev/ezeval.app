@@ -99,21 +99,22 @@
 </section>
 
 <div class="mt-6 grid gap-4 sm:grid-cols-2">
-	<a href="/app/sheets" class="card hover:border-brand-500 p-5 transition-colors">
-		<h2 class="font-display text-xl font-semibold tracking-wide">Start an evaluation</h2>
-		<p class="text-ink-500 mt-1 text-sm">Walk-up quote? Open a sheet and capture it on the spot.</p>
+	<a
+		href={data.quickSheetId ? `/app/evaluate/${data.quickSheetId}` : '/app/sheets'}
+		class="card border-brand-500 hover:bg-brand-50 p-5 transition-colors sm:col-span-2"
+	>
+		<h2 class="font-display text-2xl font-semibold tracking-wide">Start an evaluation</h2>
+		<p class="text-ink-600 mt-1 text-sm">
+			{#if data.quickSheetName}
+				Walk-up quote? Opens the {data.quickSheetName} sheet, ready to tap.
+			{:else}
+				Walk-up quote? Pick a sheet and capture it on the spot.
+			{/if}
+		</p>
 	</a>
 	<a href="/app/customers?new=1" class="card hover:border-brand-500 p-5 transition-colors">
 		<h2 class="font-display text-xl font-semibold tracking-wide">Add a customer</h2>
 		<p class="text-ink-500 mt-1 text-sm">New client? Get them on the books in thirty seconds.</p>
-	</a>
-	<a href="/app/sheets" class="card hover:border-brand-500 p-5 transition-colors">
-		<h2 class="font-display text-xl font-semibold tracking-wide">Price sheets</h2>
-		<p class="text-ink-500 mt-1 text-sm">
-			{isAdmin
-				? 'View and update your buttons, prices, and rules.'
-				: 'See the sheets set up for you.'}
-		</p>
 	</a>
 	<a href="/app/evaluations" class="card hover:border-brand-500 p-5 transition-colors">
 		<h2 class="font-display text-xl font-semibold tracking-wide">Recent quotes</h2>

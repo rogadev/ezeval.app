@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Logo from '$lib/components/Logo.svelte';
 	import type { Snippet } from 'svelte';
 
 	let {
@@ -8,6 +9,9 @@
 		footer
 	}: { title: string; subtitle?: string; children: Snippet; footer?: Snippet } = $props();
 </script>
+
+<!-- Sign-in, sign-up, and invite screens have nothing worth a search result. -->
+<svelte:head><meta name="robots" content="noindex" /></svelte:head>
 
 <div class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
 	<!-- faint glass-streak backdrop -->
@@ -21,13 +25,8 @@
 	></div>
 
 	<div class="relative w-full max-w-md">
-		<a href="/" class="mb-8 flex items-center justify-center gap-2.5">
-			<span class="bg-ink-900 relative inline-flex h-9 w-9 items-center justify-center rounded-lg">
-				<span class="bg-brand-500 absolute h-1.5 w-6 -rotate-45 rounded-full"></span>
-				<span class="bg-glass-400 absolute mt-2.5 ml-2.5 h-1 w-4 -rotate-45 rounded-full opacity-80"
-				></span>
-			</span>
-			<span class="heading-display text-3xl">EzEval</span>
+		<a href="/" class="mb-8 flex justify-center" aria-label="EzEval home">
+			<Logo size={38} />
 		</a>
 		<div class="card p-6 sm:p-8">
 			<h1 class="heading-display text-2xl">{title}</h1>
