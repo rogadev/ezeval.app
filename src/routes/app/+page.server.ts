@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const isAdmin = user.role === 'admin';
 	const today = new Date().toISOString().slice(0, 10);
 
-	const rows = await db
+	const jobsQuery = db
 		.select({
 			id: jobs.id,
 			fixedTime: jobs.fixedTime,
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	// "Start an evaluation" opens the tap tool directly: the default sheet, or
 	// the first one if no default is set. Only the id and name leave the server.
-	const sheets = await listSheets(user.businessId);
+	const [rows, sheets] = await Promise.all([jobsQuery, listSheets(user.businessId)]);
 	const quickSheet = sheets.find((s) => s.isDefault) ?? sheets[0] ?? null;
 
 	const active = rows.filter((j) => j.status === 'scheduled' || j.status === 'in_progress');
