@@ -67,6 +67,9 @@
 		}
 	];
 
+	/** Rendered height of the hero copy, used to center it while it is pinned. */
+	let copyHeight = $state(464);
+
 	const jsonLd = {
 		'@context': 'https://schema.org',
 		'@type': 'SoftwareApplication',
@@ -84,30 +87,30 @@
 <!-- HERO: the headline and the working tool -->
 <section class="bg-ink-900">
 	<div
-		class="mx-auto grid max-w-6xl gap-10 px-4 pt-12 pb-16 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,26rem)] lg:gap-14 lg:pt-20 lg:pb-24"
+		class="mx-auto grid max-w-6xl gap-10 px-4 pt-12 pb-16 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,26rem)] lg:gap-14 lg:py-16"
 	>
-		<div class="lg:pt-8">
-			<h1 class="heading-display text-paper text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
-				Quote window cleaning jobs on the glass, not on paper.
-			</h1>
-			<p class="text-ink-200 mt-6 max-w-xl text-lg leading-relaxed">
-				Walk the property, tap each window, and hand over the number. EzEval turns your price sheet
-				into a tool your whole crew can use, without showing them what's on it.
-			</p>
-			<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-				<a href="/signup" class="btn-primary btn-lg">Start your {TRIAL_DAYS}-day trial</a>
-				<p class="text-ink-300 text-[15px]">
-					No card to start.<br />
-					<span class="num">$5</span> a month after that, per business.
+		<!-- On wide screens the copy holds the middle of the viewport while the demo scrolls past,
+		     then leaves with the section. Its measured height sets the sticky offset. -->
+		<div>
+			<div class="hero-copy" bind:clientHeight={copyHeight} style:--copy-half="{copyHeight / 2}px">
+				<h1 class="heading-display text-paper text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
+					Quote window cleaning jobs on the glass, not on paper.
+				</h1>
+				<p class="text-ink-200 mt-6 max-w-xl text-lg leading-relaxed">
+					Walk the property, tap each window, and hand over the number. EzEval turns your price
+					sheet into a tool your whole crew can use, without showing them what's on it.
 				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+					<a href="/signup" class="btn-primary btn-lg">Start your {TRIAL_DAYS}-day trial</a>
+					<p class="text-ink-300 text-[15px]">
+						No card to start.<br />
+						<span class="num">$5</span> a month after that, per business.
+					</p>
+				</div>
 			</div>
 		</div>
 
 		<div>
-			<p class="text-ink-200 mb-3 text-[15px]">
-				<strong class="text-paper font-semibold">This one works.</strong> Tap a window, then switch who's
-				holding the phone.
-			</p>
 			<TapDemo />
 		</div>
 	</div>
@@ -296,3 +299,14 @@
 		Something else? Email <ObfuscatedEmail /> and a person answers.
 	</p>
 </section>
+
+<style>
+	/* Pin the hero copy at the viewport's vertical center (below the 4rem header) on wide
+	   screens. The 30rem cap keeps it beside the demo, not below it, on very tall windows. */
+	@media (min-width: 64rem) {
+		.hero-copy {
+			position: sticky;
+			top: max(5rem, calc(min(50svh, 30rem) + 2rem - var(--copy-half)));
+		}
+	}
+</style>
