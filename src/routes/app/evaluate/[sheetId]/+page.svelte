@@ -186,13 +186,13 @@
 									{button.label}
 								</span>
 								{#if showLivePrices && button.priceCents !== undefined}
-									<span class="num text-ink-400 text-xs font-normal">
+									<span class="num text-ink-600 text-xs font-normal">
 										{formatCents(button.priceCents)}{button.pricingUnit === 'per_unit'
 											? '/pane'
 											: ''}
 									</span>
 								{:else if button.pricingUnit === 'per_unit'}
-									<span class="text-ink-400 text-xs">per pane</span>
+									<span class="text-ink-600 text-xs">per pane</span>
 								{/if}
 							</button>
 							{#if count > 0}

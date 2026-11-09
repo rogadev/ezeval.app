@@ -93,7 +93,7 @@
 							class="sr-only"
 						/>
 						<span class="block text-sm font-semibold">{option.label}</span>
-						<span class="block text-xs {view === option.id ? 'text-ink-300' : 'text-ink-500'}">
+						<span class="block text-xs {view === option.id ? 'text-ink-300' : 'text-ink-600'}">
 							{option.detail}
 						</span>
 					</label>
@@ -123,7 +123,7 @@
 				<span class="font-display text-ink-800 text-base font-semibold tracking-wide">
 					{row.label}
 				</span>
-				<span class="text-ink-500 text-xs">{row.hint}</span>
+				<span class="text-ink-600 text-xs">{row.hint}</span>
 			</p>
 			<div class="grid grid-cols-3 gap-1.5">
 				{#each row.buttons as button (button.id)}
@@ -139,11 +139,11 @@
 						>
 							{button.label}
 							{#if view === 'owner'}
-								<span class="num text-ink-500 text-xs font-normal">
+								<span class="num text-ink-600 text-xs font-normal">
 									{formatCents(prices[button.id])}{button.pricingUnit === 'per_unit' ? '/pane' : ''}
 								</span>
 							{:else if button.pricingUnit === 'per_unit'}
-								<span class="text-ink-500 text-xs font-normal">per pane</span>
+								<span class="text-ink-600 text-xs font-normal">per pane</span>
 							{/if}
 						</button>
 						{#if count > 0}
@@ -243,7 +243,7 @@
 			{#each SAMPLE_SHEET.rows as row (row.label)}
 				<fieldset>
 					<legend class="text-ink-800 mb-1.5 text-sm font-semibold">
-						{row.label} <span class="text-ink-500 font-normal">({row.hint.toLowerCase()})</span>
+						{row.label} <span class="text-ink-600 font-normal">({row.hint.toLowerCase()})</span>
 					</legend>
 					<div class="grid grid-cols-3 gap-2">
 						{#each row.buttons as button (button.id)}
