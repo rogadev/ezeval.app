@@ -71,13 +71,15 @@
 		<div>
 			<div class="flex items-baseline justify-between">
 				<label for="password" class="field-label">Password</label>
+				<!-- The label carries the state, so there's no aria-pressed. The before: layer
+				     widens the touch target to at least 44px without shifting the row. -->
 				<button
 					type="button"
-					class="text-ink-600 hover:text-ink-900 text-sm font-medium underline underline-offset-2"
-					aria-pressed={showPassword}
+					class="text-ink-600 hover:text-ink-900 relative text-sm font-medium underline underline-offset-2 before:absolute before:-inset-x-2 before:-inset-y-3"
+					aria-controls="password"
 					onclick={() => (showPassword = !showPassword)}
 				>
-					{showPassword ? 'Hide' : 'Show'}
+					{showPassword ? 'Hide' : 'Show'}<span class="sr-only"> password</span>
 				</button>
 			</div>
 			<input
