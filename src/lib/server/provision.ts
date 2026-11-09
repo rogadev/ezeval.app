@@ -1,3 +1,4 @@
+import { SAMPLE_SHEET } from '$lib/pricing/sample-sheet';
 import { db } from './db';
 import {
 	businessTaxes,
@@ -8,50 +9,11 @@ import {
 	workflowSteps
 } from './db/schema';
 
-/**
- * The founder's original 2021 reference sheet (spec §4.2), recovered from the
- * old app's default_pricing.js. Setup is not a button: the default sheet uses
- * the auto-attaching setup fee ($22.50) so nobody has to remember to tap it.
- */
+/** The starter sheet: the public sample sheet's prices, saved as the business's default. */
 const DEFAULT_SHEET = {
+	...SAMPLE_SHEET,
 	name: 'Residential',
-	setupFeeEnabled: true,
-	setupFeeCents: 2250,
-	estimatorVisibility: 'grand_total' as const,
-	minimumCents: 15000,
-	rows: [
-		{
-			label: 'Special',
-			buttons: [
-				{ label: 'Skylight', priceCents: 1800, pricingUnit: 'flat' as const },
-				{ label: 'French', priceCents: 100, pricingUnit: 'per_unit' as const }
-			]
-		},
-		{
-			label: 'High Level',
-			buttons: [
-				{ label: 'Small', priceCents: 500, pricingUnit: 'flat' as const },
-				{ label: 'Medium', priceCents: 600, pricingUnit: 'flat' as const },
-				{ label: 'Large', priceCents: 700, pricingUnit: 'flat' as const }
-			]
-		},
-		{
-			label: 'Mid Level',
-			buttons: [
-				{ label: 'Small', priceCents: 400, pricingUnit: 'flat' as const },
-				{ label: 'Medium', priceCents: 500, pricingUnit: 'flat' as const },
-				{ label: 'Large', priceCents: 600, pricingUnit: 'flat' as const }
-			]
-		},
-		{
-			label: 'Ground Level',
-			buttons: [
-				{ label: 'Small', priceCents: 300, pricingUnit: 'flat' as const },
-				{ label: 'Medium', priceCents: 400, pricingUnit: 'flat' as const },
-				{ label: 'Large', priceCents: 550, pricingUnit: 'flat' as const }
-			]
-		}
-	]
+	estimatorVisibility: 'grand_total' as const
 };
 
 const DEFAULT_WORKFLOW = {

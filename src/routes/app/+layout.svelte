@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Icon from '$lib/components/Icon.svelte';
+	import Logo from '$lib/components/Logo.svelte';
 	import type { LayoutData } from './$types';
 	import type { Snippet } from 'svelte';
 
@@ -62,12 +63,8 @@
 	<aside
 		class="bg-ink-900 text-ink-200 sticky top-0 hidden h-screen w-60 shrink-0 flex-col lg:flex"
 	>
-		<a href="/app" class="flex items-center gap-2.5 px-5 pt-6 pb-4">
-			<span class="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
-				<span class="bg-brand-500 absolute h-1 w-5 -rotate-45 rounded-full"></span>
-				<span class="bg-glass-400 absolute mt-2 ml-2 h-0.5 w-3.5 -rotate-45 rounded-full"></span>
-			</span>
-			<span class="heading-display text-paper text-2xl">EzEval</span>
+		<a href="/app" class="px-5 pt-6 pb-4" aria-label="EzEval, today">
+			<Logo tone="light" />
 		</a>
 		<p class="text-ink-400 truncate px-5 pb-4 text-sm font-medium">{data.business.name}</p>
 
@@ -106,15 +103,8 @@
 		<header
 			class="bg-ink-900 text-paper sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:hidden"
 		>
-			<a href="/app" class="flex items-center gap-2">
-				<span
-					class="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/10"
-				>
-					<span class="bg-brand-500 absolute h-1 w-4.5 -rotate-45 rounded-full"></span>
-					<span class="bg-glass-400 absolute mt-1.5 ml-1.5 h-0.5 w-3 -rotate-45 rounded-full"
-					></span>
-				</span>
-				<span class="heading-display text-paper text-xl">EzEval</span>
+			<a href="/app" aria-label="EzEval, today">
+				<Logo tone="light" size={28} />
 			</a>
 			<span class="text-ink-300 max-w-[50%] truncate text-sm font-medium">
 				{data.business.name}

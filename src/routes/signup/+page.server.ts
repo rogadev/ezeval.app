@@ -6,9 +6,8 @@ import { db } from '$lib/server/db';
 import { businesses, user } from '$lib/server/db/schema';
 import { provisionBusinessDefaults } from '$lib/server/provision';
 import { billingEnabled } from '$lib/server/billing';
+import { TRIAL_DAYS } from '$lib/site';
 import type { Actions, PageServerLoad } from './$types';
-
-const TRIAL_DAYS = 14;
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user?.businessId) redirect(303, '/app');
@@ -32,9 +31,6 @@ export const actions: Actions = {
 				businessName,
 				email
 			});
-		}
-		if (password !== String(form.get('passwordConfirm') ?? '')) {
-			return fail(400, { message: "Passwords don't match.", name, businessName, email });
 		}
 
 		let newUserId: string;

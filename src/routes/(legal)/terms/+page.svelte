@@ -1,11 +1,13 @@
 <script lang="ts">
+	import Seo from '$lib/components/Seo.svelte';
 	import ObfuscatedEmail from '$lib/components/ObfuscatedEmail.svelte';
 </script>
 
-<svelte:head>
-	<title>Terms of Service — EzEval</title>
-	<meta name="description" content="Terms of Service for EzEval, a product of Roga Digital." />
-</svelte:head>
+<Seo
+	title="Terms of Service | EzEval"
+	description="Terms of Service for EzEval, a product of Roga Digital."
+	path="/terms"
+/>
 
 <h1>Terms of Service</h1>
 <p class="updated">Last updated: June 11, 2026</p>

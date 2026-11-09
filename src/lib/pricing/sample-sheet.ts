@@ -1,0 +1,89 @@
+import type { PricingUnit } from './engine';
+
+/** A tap button on the public sample sheet, priced in integer cents. */
+export interface SampleButton {
+	id: string;
+	label: string;
+	priceCents: number;
+	pricingUnit: PricingUnit;
+}
+
+/** One access-level row of buttons on the sample sheet. */
+export interface SampleRow {
+	label: string;
+	/** One line on what the access level means on the job. */
+	hint: string;
+	buttons: SampleButton[];
+}
+
+/** The sheet shape the public demo and the starter sheet share. */
+export interface SampleSheet {
+	setupFeeEnabled: boolean;
+	setupFeeCents: number;
+	minimumCents: number;
+	rows: SampleRow[];
+}
+
+/**
+ * The founder's original 2021 reference sheet (spec §4.2), recovered from the
+ * old app's default_pricing.js. It is the one source for both the public demo
+ * and price calculator and the starter sheet every new business gets
+ * (`provisionBusinessDefaults`), so what a visitor taps on the marketing site
+ * is what they find after signing up. Setup is not a button: the sheet uses
+ * the auto-attaching setup fee ($22.50) so nobody has to remember to tap it.
+ */
+export const SAMPLE_SHEET: SampleSheet = {
+	setupFeeEnabled: true,
+	setupFeeCents: 2250,
+	minimumCents: 15000,
+	rows: [
+		{
+			label: 'Special',
+			hint: 'Priced on their own',
+			buttons: [
+				{ id: 'special-skylight', label: 'Skylight', priceCents: 1800, pricingUnit: 'flat' },
+				{ id: 'special-french', label: 'French', priceCents: 100, pricingUnit: 'per_unit' }
+			]
+		},
+		{
+			label: 'High level',
+			hint: 'Roof and rope work',
+			buttons: [
+				{ id: 'high-small', label: 'Small', priceCents: 500, pricingUnit: 'flat' },
+				{ id: 'high-medium', label: 'Medium', priceCents: 600, pricingUnit: 'flat' },
+				{ id: 'high-large', label: 'Large', priceCents: 700, pricingUnit: 'flat' }
+			]
+		},
+		{
+			label: 'Mid level',
+			hint: 'Water-fed pole',
+			buttons: [
+				{ id: 'mid-small', label: 'Small', priceCents: 400, pricingUnit: 'flat' },
+				{ id: 'mid-medium', label: 'Medium', priceCents: 500, pricingUnit: 'flat' },
+				{ id: 'mid-large', label: 'Large', priceCents: 600, pricingUnit: 'flat' }
+			]
+		},
+		{
+			label: 'Ground level',
+			hint: 'Walk-up glass',
+			buttons: [
+				{ id: 'ground-small', label: 'Small', priceCents: 300, pricingUnit: 'flat' },
+				{ id: 'ground-medium', label: 'Medium', priceCents: 400, pricingUnit: 'flat' },
+				{ id: 'ground-large', label: 'Large', priceCents: 550, pricingUnit: 'flat' }
+			]
+		}
+	]
+};
+
+/** A half-finished walk-through, so the demo opens with numbers already on it. */
+export const SAMPLE_COUNTS: Record<string, number> = {
+	'special-skylight': 1,
+	'special-french': 14,
+	'high-medium': 4,
+	'high-large': 3,
+	'mid-small': 4,
+	'mid-medium': 6,
+	'ground-small': 6,
+	'ground-medium': 5,
+	'ground-large': 2
+};

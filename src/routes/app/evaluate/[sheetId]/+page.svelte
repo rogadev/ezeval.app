@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import Icon from '$lib/components/Icon.svelte';
+	import { draftKey, isEmptyDraft, parseDraft, serializeDraft } from '$lib/pricing/draft';
 	import { formatCents } from '$lib/pricing/engine';
 	import type { ActionData, PageData } from './$types';
 
@@ -38,6 +40,8 @@
 	});
 
 	function tap(button: ButtonRef) {
+		// A new count has started, so undoing "Start over" would overwrite it.
+		cleared = null;
 		counts[button.id] = (counts[button.id] ?? 0) + 1;
 		if (navigator.vibrate) navigator.vibrate(10);
 	}
@@ -54,6 +58,78 @@
 	);
 
 	const selectedCustomer = $derived(data.customers.find((c) => c.id === customerId));
+
+	// The count in progress is kept on the device until it is saved, so a
+	// refresh, a closed tab, or a dropped signal doesn't lose the walk-through.
+	// Only metrics are stored, never prices.
+	const storageKey = $derived(draftKey(sheet.id, data.job?.id ?? null));
+	let draftLoaded = $state(false);
+	let restored = $state(false);
+
+	onMount(() => {
+		try {
+			const draft = parseDraft(
+				localStorage.getItem(storageKey),
+				new Set(allButtons.map((b) => b.id)),
+				Date.now()
+			);
+			if (draft) {
+				counts = draft.counts;
+				notes = draft.notes;
+				// A job fixes the customer; otherwise restore the pick if it still exists.
+				if (!data.job && data.customers.some((c) => c.id === draft.customerId)) {
+					customerId = draft.customerId;
+				}
+				restored = true;
+			}
+		} catch {
+			// Storage is unavailable (private mode, blocked): capture still works, unsaved.
+		}
+		draftLoaded = true;
+		return () => clearTimeout(undoTimer);
+	});
+
+	$effect(() => {
+		const draft = { counts: $state.snapshot(counts), notes, customerId, savedAt: Date.now() };
+		if (!draftLoaded) return;
+		try {
+			if (isEmptyDraft(draft)) localStorage.removeItem(storageKey);
+			else localStorage.setItem(storageKey, serializeDraft(draft));
+		} catch {
+			// Same as above: nothing to do without storage.
+		}
+	});
+
+	function clearDraft() {
+		try {
+			localStorage.removeItem(storageKey);
+		} catch {
+			// Nothing stored, nothing to clear.
+		}
+	}
+
+	// "Start over" keeps the cleared count for a few seconds so one stray tap
+	// can't throw away a walk-through.
+	const UNDO_MS = 10_000;
+	let cleared = $state<{ counts: Record<string, number>; notes: string } | null>(null);
+	let undoTimer: ReturnType<typeof setTimeout> | undefined;
+
+	function startOver() {
+		cleared = { counts: $state.snapshot(counts), notes };
+		counts = {};
+		notes = '';
+		restored = false;
+		clearTimeout(undoTimer);
+		undoTimer = setTimeout(() => (cleared = null), UNDO_MS);
+	}
+
+	function undoStartOver() {
+		if (!cleared) return;
+		counts = cleared.counts;
+		notes = cleared.notes;
+		cleared = null;
+		clearTimeout(undoTimer);
+	}
 </script>
 
 <svelte:head>
@@ -71,7 +147,7 @@
 <!-- Sticky tally bar -->
 <div class="card sticky top-16 z-20 mb-5 flex items-center justify-between px-5 py-3 lg:top-4">
 	<div>
-		<p class="field-label mb-0">Panes</p>
+		<p class="field-label mb-0">Items</p>
 		<p class="num text-2xl">{unitCount}</p>
 	</div>
 	{#if showLivePrices}
@@ -90,6 +166,24 @@
 
 <h1 class="heading-display text-2xl">{sheet.name}</h1>
 
+{#if restored}
+	<div
+		class="bg-glass-50 text-glass-900 mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl px-4 py-3 text-sm font-medium"
+		role="status"
+	>
+		<span>Picked up your unsaved count from earlier.</span>
+		<button type="button" class="btn-outline btn-sm" onclick={startOver}>Start over</button>
+	</div>
+{:else if cleared}
+	<div
+		class="bg-ink-100 text-ink-900 mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl px-4 py-3 text-sm font-medium"
+		role="status"
+	>
+		<span>Count cleared.</span>
+		<button type="button" class="btn-outline btn-sm" onclick={undoStartOver}>Undo</button>
+	</div>
+{/if}
+
 {#if selectedCustomer?.animalNotes}
 	<p class="chip-hazard mt-3">
 		<Icon name="paw" size={18} />
@@ -105,30 +199,46 @@
 				<h2 class="heading-display text-ink-600 mb-2 text-lg">{row.label}</h2>
 				<div class="grid grid-cols-3 gap-2 sm:gap-3">
 					{#each row.buttons as button (button.id)}
-						<button
-							type="button"
-							onclick={() => tap(button)}
-							class="card hover:border-brand-500 active:border-brand-500 active:bg-brand-50 relative flex min-h-20 flex-col
-								items-center justify-center gap-0.5 px-1 py-3 transition-colors active:translate-y-0.5 sm:min-h-24"
-						>
-							{#if (counts[button.id] ?? 0) > 0}
+						{@const count = counts[button.id] ?? 0}
+						<div class="relative">
+							<button
+								type="button"
+								onclick={() => tap(button)}
+								aria-label="Add one {button.label}, {row.label}. Count {count}"
+								class="card hover:border-brand-500 active:border-brand-500 active:bg-brand-50 flex min-h-20 w-full flex-col
+									items-center justify-center gap-0.5 px-1 py-3 transition-colors active:translate-y-0.5 sm:min-h-24"
+							>
+								<span class="px-1 text-center text-base leading-tight font-semibold sm:text-lg">
+									{button.label}
+								</span>
+								{#if showLivePrices && button.priceCents !== undefined}
+									<span class="num text-ink-600 text-xs font-normal">
+										{formatCents(button.priceCents)}{button.pricingUnit === 'per_unit'
+											? '/pane'
+											: ''}
+									</span>
+								{:else if button.pricingUnit === 'per_unit'}
+									<span class="text-ink-600 text-xs">per pane</span>
+								{/if}
+							</button>
+							{#if count > 0}
 								<span
-									class="bg-brand-500 text-ink-950 num absolute -top-2 -right-2 flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-sm shadow"
+									class="bg-brand-500 text-ink-950 num pointer-events-none absolute -top-2 -right-2 flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-sm shadow"
 								>
-									{counts[button.id]}
+									{count}
 								</span>
+								<!-- Undo a mis-tap without scrolling to the itemized list. The circle is 36px;
+									 the before: layer widens the touch target to 44px for gloved hands. -->
+								<button
+									type="button"
+									onclick={() => setCount(button.id, count - 1)}
+									aria-label="Remove one {button.label}, {row.label}"
+									class="border-ink-300 text-ink-700 active:bg-ink-100 absolute top-1 left-1 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white before:absolute before:-inset-1.5 before:rounded-full"
+								>
+									<Icon name="minus" size={16} />
+								</button>
 							{/if}
-							<span class="px-1 text-center text-base leading-tight font-semibold sm:text-lg">
-								{button.label}
-							</span>
-							{#if showLivePrices && button.priceCents !== undefined}
-								<span class="num text-ink-400 text-xs font-normal">
-									{formatCents(button.priceCents)}{button.pricingUnit === 'per_unit' ? '/pane' : ''}
-								</span>
-							{:else if button.pricingUnit === 'per_unit'}
-								<span class="text-ink-400 text-xs">per pane</span>
-							{/if}
-						</button>
+						</div>
 					{/each}
 				</div>
 			</section>
@@ -192,8 +302,10 @@
 	class="mt-6 space-y-4"
 	use:enhance={() => {
 		saving = true;
-		return async ({ update }) => {
+		return async ({ result, update }) => {
 			saving = false;
+			// A redirect means the evaluation was saved, so the draft is done.
+			if (result.type === 'redirect') clearDraft();
 			await update({ reset: false });
 		};
 	}}

@@ -89,9 +89,34 @@
 	}
 }
 
-/* Oversized tactile button base: 48px+ targets, pressed-state drop */
+/* Oversized tactile button base: 48px+ targets, pressed-state drop.
+ * Size comes from custom properties so btn-sm / btn-lg can resize any variant. */
 @utility btn {
-	@apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition-all duration-100 select-none active:translate-y-0.5 disabled:pointer-events-none disabled:opacity-50;
+	@apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-100 select-none active:translate-y-0.5 disabled:pointer-events-none disabled:opacity-50;
+	min-height: var(--btn-height, 3rem);
+	padding-inline: var(--btn-padding, 1.25rem);
+	font-size: var(--btn-text, 1rem);
+	line-height: 1.5;
+}
+@utility btn-sm {
+	--btn-height: 2.5rem;
+	--btn-padding: 1rem;
+	--btn-text: 0.9375rem;
+}
+@utility btn-lg {
+	--btn-height: 3.5rem;
+	--btn-padding: 2rem;
+	--btn-text: 1.125rem;
+}
+
+/* Safety-tape divider: the same stripe as the hazard chip, used once per page */
+@utility tape {
+	height: 0.5rem;
+	background-image: repeating-linear-gradient(
+		-45deg,
+		var(--color-brand-500) 0 12px,
+		var(--color-ink-950) 12px 24px
+	);
 }
 @utility btn-primary {
 	@apply btn bg-brand-500 text-ink-950 shadow-[0_3px_0_0_var(--color-brand-700)] hover:bg-brand-400 active:shadow-[0_1px_0_0_var(--color-brand-700)];

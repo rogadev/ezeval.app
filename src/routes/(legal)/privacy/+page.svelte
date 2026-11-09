@@ -1,11 +1,13 @@
 <script lang="ts">
+	import Seo from '$lib/components/Seo.svelte';
 	import ObfuscatedEmail from '$lib/components/ObfuscatedEmail.svelte';
 </script>
 
-<svelte:head>
-	<title>Privacy Policy — EzEval</title>
-	<meta name="description" content="Privacy Policy for EzEval, a product of Roga Digital." />
-</svelte:head>
+<Seo
+	title="Privacy Policy | EzEval"
+	description="Privacy Policy for EzEval, a product of Roga Digital."
+	path="/privacy"
+/>
 
 <h1>Privacy Policy</h1>
 <p class="updated">Last updated: June 11, 2026</p>

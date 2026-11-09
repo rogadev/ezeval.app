@@ -2,6 +2,7 @@ import { and, asc, eq, sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { customers, jobs, jobWorkflowItems, user as userTable } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
+import { listSheets } from '$lib/server/sheets';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -9,7 +10,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const isAdmin = user.role === 'admin';
 	const today = new Date().toISOString().slice(0, 10);
 
-	const rows = await db
+	const jobsQuery = db
 		.select({
 			id: jobs.id,
 			fixedTime: jobs.fixedTime,
@@ -35,11 +36,18 @@ export const load: PageServerLoad = async ({ locals }) => {
 		)
 		.orderBy(asc(jobs.routeOrder), asc(jobs.fixedTime), asc(jobs.createdAt));
 
+	// "Start an evaluation" opens the tap tool directly: the default sheet, or
+	// the first one if no default is set. Only the id and name leave the server.
+	const [rows, sheets] = await Promise.all([jobsQuery, listSheets(user.businessId)]);
+	const quickSheet = sheets.find((s) => s.isDefault) ?? sheets[0] ?? null;
+
 	const active = rows.filter((j) => j.status === 'scheduled' || j.status === 'in_progress');
 
 	return {
 		today,
 		todaysJobs: rows,
-		nextJob: active[0] ?? null
+		nextJob: active[0] ?? null,
+		quickSheetId: quickSheet?.id ?? null,
+		quickSheetName: quickSheet?.name ?? null
 	};
 };
