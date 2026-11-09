@@ -185,7 +185,7 @@
 								<span>
 									<span class="num">{item.quantity}</span>
 									&times; {item.buttonLabel}
-									<span class="text-ink-500">{item.rowLabel}</span>
+									<span class="text-ink-600">{item.rowLabel}</span>
 								</span>
 								{#if item.lineTotalCents !== undefined}
 									<span class="num font-normal">{formatCents(item.lineTotalCents)}</span>

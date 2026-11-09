@@ -89,7 +89,7 @@
 				autocomplete="new-password"
 				class="field"
 			/>
-			<p class="text-ink-500 mt-1 text-xs">At least 8 characters.</p>
+			<p class="text-ink-600 mt-1 text-xs">At least 8 characters.</p>
 		</div>
 		<button type="submit" disabled={submitting} class="btn-primary w-full">
 			{submitting ? 'Creating account…' : 'Create account'}
