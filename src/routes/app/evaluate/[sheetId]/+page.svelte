@@ -227,12 +227,13 @@
 								>
 									{count}
 								</span>
-								<!-- Undo a mis-tap without scrolling to the itemized list -->
+								<!-- Undo a mis-tap without scrolling to the itemized list. The circle is 36px;
+									 the before: layer widens the touch target to 44px for gloved hands. -->
 								<button
 									type="button"
 									onclick={() => setCount(button.id, count - 1)}
 									aria-label="Remove one {button.label}, {row.label}"
-									class="border-ink-300 text-ink-700 active:bg-ink-100 absolute top-1 left-1 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white"
+									class="border-ink-300 text-ink-700 active:bg-ink-100 absolute top-1 left-1 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white before:absolute before:-inset-1.5 before:rounded-full"
 								>
 									<Icon name="minus" size={16} />
 								</button>

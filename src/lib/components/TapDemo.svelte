@@ -158,7 +158,8 @@
 								onclick={() => untap(button.id)}
 								aria-label="Remove one {button.label}, {row.label}"
 								class="border-ink-300 text-ink-700 hover:border-ink-500 absolute top-1 left-1 flex h-6 w-6
-									cursor-pointer items-center justify-center rounded-full border-2 bg-white"
+									cursor-pointer items-center justify-center rounded-full border-2 bg-white before:absolute
+									before:-inset-1.5 before:rounded-full"
 							>
 								<Icon name="minus" size={12} />
 							</button>
