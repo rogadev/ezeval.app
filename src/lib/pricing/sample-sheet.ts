@@ -1,5 +1,6 @@
 import type { PricingUnit } from './engine';
 
+/** A tap button on the public sample sheet, priced in integer cents. */
 export interface SampleButton {
 	id: string;
 	label: string;
@@ -7,6 +8,7 @@ export interface SampleButton {
 	pricingUnit: PricingUnit;
 }
 
+/** One access-level row of buttons on the sample sheet. */
 export interface SampleRow {
 	label: string;
 	/** One line on what the access level means on the job. */
@@ -14,6 +16,7 @@ export interface SampleRow {
 	buttons: SampleButton[];
 }
 
+/** The sheet shape the public demo and the starter sheet share. */
 export interface SampleSheet {
 	setupFeeEnabled: boolean;
 	setupFeeCents: number;

@@ -15,6 +15,7 @@ export const PUBLIC_PAGES = [
 	{ path: '/privacy', priority: 0.2 }
 ] as const;
 
+/** Builds the full public URL for a site-relative path, such as `/terms`. */
 export function absoluteUrl(path: string): string {
 	return `${SITE_URL}${path === '/' ? '/' : path}`;
 }

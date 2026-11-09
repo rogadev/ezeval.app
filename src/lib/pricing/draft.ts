@@ -6,10 +6,12 @@
  * It never holds a price, so it is safe on a non-admin's phone.
  */
 
+/** An in-progress evaluation as stored on the device: metrics and notes, never prices. */
 export interface EvaluationDraft {
 	/** buttonId -> tapped quantity, positive entries only. */
 	counts: Record<string, number>;
 	notes: string;
+	/** The picked customer's id, or `''` when no customer is picked. */
 	customerId: string;
 	/** Epoch milliseconds of the last change. */
 	savedAt: number;
@@ -20,6 +22,11 @@ export const DRAFT_MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000;
 
 const MAX_QUANTITY = 10_000;
 
+/**
+ * Gets the storage key for one sheet's draft, scoped to a job or to a walk-up
+ * with no job. The format is a storage contract: changing it orphans every
+ * draft already saved on a device.
+ */
 export function draftKey(sheetId: string, jobId: string | null): string {
 	return `ezeval:draft:${sheetId}:${jobId ?? 'walk-up'}`;
 }
@@ -29,6 +36,7 @@ export function isEmptyDraft(draft: Pick<EvaluationDraft, 'counts' | 'notes'>): 
 	return Object.values(draft.counts).every((n) => n <= 0) && draft.notes.trim() === '';
 }
 
+/** Serializes a draft to JSON for storage, dropping counts that are zero or negative. */
 export function serializeDraft(draft: EvaluationDraft): string {
 	const counts = Object.fromEntries(Object.entries(draft.counts).filter(([, n]) => n > 0));
 	return JSON.stringify({ ...draft, counts });
